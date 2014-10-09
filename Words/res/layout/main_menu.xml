@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="${relativePackage}.${activityClass}" >
+	
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" >
+    
+	    <Button
+	        android:id="@+id/btnQuickStart"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerHorizontal="true"
+	        android:layout_alignParentTop="true"
+	        android:gravity="center"
+	        android:onClick="QuickStart_Clicked"
+	        android:text="Quick Start" 
+	        style="?android:attr/borderlessButtonStyle" />
+	    
+	    <Button
+		    android:id="@+id/btnNewGame"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@+id/btnQuickStart"
+		    android:gravity="center"
+		    android:layout_centerHorizontal="true"
+		    android:text="New Game"
+		    android:onClick="NewGame_Clicked"
+		    style="?android:attr/borderlessButtonStyle" />
+	    
+	    <Button
+		    android:id="@+id/btnLoadGame"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@+id/btnNewGame"
+		    android:gravity="center"
+		    android:layout_centerHorizontal="true"
+		    android:text="Load Game"
+		    android:onClick="LoadGame_Clicked"
+		    style="?android:attr/borderlessButtonStyle" />
+	    
+	    <Button
+		    android:id="@+id/btnSettings"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@+id/btnLoadGame"
+		    android:gravity="center"
+		    android:layout_centerHorizontal="true"
+		    android:text="Settings"
+		    android:onClick="Settings_Clicked"
+		    style="?android:attr/borderlessButtonStyle" />
+	    
+	    <Button
+		    android:id="@+id/btnHighScores"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@+id/btnSettings"
+		    android:gravity="center"
+		    android:layout_centerHorizontal="true"
+		    android:text="High Scores"
+		    android:onClick="HighScores_Clicked"
+		    style="?android:attr/borderlessButtonStyle" />
+	</RelativeLayout>
+</RelativeLayout>
