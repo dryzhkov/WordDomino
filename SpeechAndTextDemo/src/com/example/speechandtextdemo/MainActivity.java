@@ -1,5 +1,9 @@
 package com.example.speechandtextdemo;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
+import com.example.speechandtextdemo.R;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,9 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.ArrayList;
-import java.util.Locale;
-
 public class MainActivity extends ActionBarActivity {
 	protected static final int RESULT_SPEECH = 1;
 	
