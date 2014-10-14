@@ -12,6 +12,8 @@ public class WordDictionary {
 	private WordArrayNode root;
 	private static final char firstLetter = 'a';
 	private static final int minWordLength = 2;
+	private static final int arrayLowerBound = 0;
+	private static final int arrayUpperBound = 25;
 	
 	public WordDictionary(){
 		root = new WordArrayNode();
@@ -40,11 +42,14 @@ public class WordDictionary {
 		for(int i = 0; i < word.length(); i++){
 			char curLetter = word.charAt(i);
 			int asciiIndex = AtoI(curLetter);
+			if(asciiIndex < arrayLowerBound || asciiIndex > arrayUpperBound){
+				throw new IllegalArgumentException("WordDictionary::Invalid letter: '" + word + "' in argument word: '" + curLetter + "' ascii index: '" + asciiIndex + "'");
+			}
 			WordNode[] curNodesArray = cur.nodes;
 			WordNode curNode = curNodesArray[asciiIndex];
 			if(curNode == null){
 				if(shouldAdd){
-					curNode = new WordNode(curLetter);
+					curNode = new WordNode();
 					curNodesArray[asciiIndex] = curNode;
 				}else{
 					return false;
@@ -93,7 +98,7 @@ class WordNode{
 	public boolean isWord;
 	public WordArrayNode children;
 	
-	public WordNode(char newLetter){
+	public WordNode(){
 		this.children = new WordArrayNode();
 	}
 }
