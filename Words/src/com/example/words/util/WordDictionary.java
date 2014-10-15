@@ -1,6 +1,5 @@
 package com.example.words.util;
 
-import android.R;
 import android.annotation.SuppressLint;
 
 import java.io.FileInputStream;
