@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+  	android:layout_height="fill_parent"
+	>
+   	<TextView
+       	android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/quick_start_head"
+        android:text="@string/str_quick_start_head"
+        android:textSize="50sp"
+        android:layout_marginBottom="50sp"
+       />
+   	<TextView
+       	android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/quick_start_askquestion"
+        android:text="@string/str_quick_start_askquestion"
+       />
+</LinearLayout>
