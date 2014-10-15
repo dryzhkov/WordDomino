@@ -1,6 +1,7 @@
 package com.example.words;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +27,8 @@ public class MainMenuActivity extends Activity {
     	Toast.makeText(getApplicationContext(),
     		      "Quick Start Clicked!", 
     		      Toast.LENGTH_LONG).show();
+    	Intent intent = new Intent(this, QuickStart.class);
+    	startActivity(intent);
     	
     }
     
@@ -59,26 +62,5 @@ public class MainMenuActivity extends Activity {
     		      "High Scores Clicked!", 
     		      Toast.LENGTH_LONG).show();
 
-    }
-    
-    public void LoadWordsFromFile(){
-    	WordDictionary myDictionary = new WordDictionary();
-    	InputStream ins = getResources().openRawResource(R.raw.cities);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
-        
-        String line;
-		try {
-			line = reader.readLine();
-			while(line != null){
-				if(!line.isEmpty()){
-					myDictionary.Add(line);
-				}
-	        	line = reader.readLine();
-	        }
-		}catch (IOException ioe){
-			ioe.printStackTrace();
-		}catch (Exception e){
-			e.printStackTrace();
-		}
     }
 }

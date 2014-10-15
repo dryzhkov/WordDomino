@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">Words</string>
+	<string name="str_quick_start_head">Do you want to play a game?</string>
+	<string name="str_quick_start_askquestion"></string>
 </resources>
