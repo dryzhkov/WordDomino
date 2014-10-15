@@ -4,19 +4,37 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Locale;
 
 import android.content.Context;
+import android.speech.tts.TextToSpeech;
+import android.widget.Toast;
 
 import com.example.words.R;
 
 public class Util {
 	Context context;
+	WordDictionary myDictionary;
+	TextToSpeech tts;
 	public Util(Context c) {
 		this.context = c;
+		tts = new TextToSpeech(c.getApplicationContext(), new TextToSpeech.OnInitListener() {
+			@Override
+			public void onInit(int status) {
+				if(status != TextToSpeech.ERROR){
+					tts.setLanguage(Locale.US);
+				}else{
+					/*Toast t = Toast.makeText(getApplicationContext(), 
+							"Text To Speech is not supported", 
+							Toast.LENGTH_SHORT);
+					t.show();*/
+				}
+			}
+		});
 	}
 	
 	public WordDictionary LoadWordsFromFile(){
-    	WordDictionary myDictionary = new WordDictionary();
+    	myDictionary = new WordDictionary();
     	InputStream ins = this.context.getResources().openRawResource(R.raw.cities);
         BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
         
@@ -36,4 +54,8 @@ public class Util {
 		}
 		return myDictionary;
     }
+	
+	public void SpeakText(String str) {
+		tts.speak(str, TextToSpeech.QUEUE_FLUSH, null);
+	}
 }
