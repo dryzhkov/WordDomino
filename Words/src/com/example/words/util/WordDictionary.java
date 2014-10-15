@@ -36,6 +36,7 @@ public class WordDictionary {
 	private boolean Find(String word, boolean shouldAdd){
 		Validate(word); //validate input
 		word = word.toLowerCase(); //treat all letters as lower case
+		word.replace(" ", ""); //remove all white spaces
 		WordArrayNode cur = root; //pointer to the first array of nodes
 		
 		for(int i = 0; i < word.length(); i++){
