@@ -1,9 +1,7 @@
 package com.example.words.util;
 
 import android.annotation.SuppressLint;
-
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.util.Random;
 /*
  * Dictionary manages our word database
  */
@@ -12,7 +10,7 @@ public class WordDictionary {
 	private static final char firstLetter = 'a';
 	private static final int minWordLength = 2;
 	private static final int arrayLowerBound = 0;
-	private static final int arrayUpperBound = 25;
+	private static final int arrayUpperBound = 26; //26 letters + space char
 	
 	public WordDictionary(){
 		root = new WordArrayNode();
@@ -30,6 +28,43 @@ public class WordDictionary {
 	 */
 	public boolean Contains(String word){
 		return Find(word, false);
+	}
+	
+	/*
+	 * Returns a randomly selected word, if not found in 10 seconds returns empty string
+	 */
+	public String GetRandomWord(){
+		StringBuilder rsl = new StringBuilder();
+		Random r = new Random();
+		boolean foundWord = false;
+		WordArrayNode cur = root;
+		WordNode curNode = null;
+		long maxRunInMiliseconds = 10000;
+		long startTime = System.currentTimeMillis();
+		long currentTime = startTime;
+		
+		while(maxRunInMiliseconds > currentTime - startTime){
+			//pick a random node
+			int randomIndex = r.nextInt(arrayUpperBound + 1);
+			curNode = cur.nodes[randomIndex];
+
+			if(curNode != null){
+				rsl.append(ItoA(randomIndex)); //add current letter to an existing collection
+				
+				if(curNode.isWord){ //are we done?
+					foundWord = true;
+					System.out.println("Found a word hurray!!!");
+					break;
+				}else{
+					//move current one level down
+					cur = curNode.children;
+				}
+			}
+			//update current time
+			currentTime = System.currentTimeMillis();
+		}
+		
+		return (foundWord ? rsl.toString() : "");
 	}
 	
 	@SuppressLint("DefaultLocale") 
@@ -76,11 +111,16 @@ public class WordDictionary {
 	}
 	
 	private int AtoI(char c){
+		if(c == ' '){
+			return arrayUpperBound;
+		}
 		return c - firstLetter;
 	}
 	
-	@SuppressWarnings("unused") /*remove later*/
 	private char ItoA(int i){
+		if(i == arrayUpperBound){
+			return ' ';
+		}
 		return (char) (i + firstLetter);
 	}
 	
@@ -90,7 +130,7 @@ class WordArrayNode{
 	public WordNode[] nodes;
 	
 	public WordArrayNode(){
-		nodes = new WordNode[26];
+		nodes = new WordNode[27]; //keep in sync with arrayUpperBound + 1 in WordDictionary
 	}
 }
 
