@@ -7,7 +7,9 @@ import java.io.InputStreamReader;
 import java.util.Locale;
 
 import android.content.Context;
+import android.net.sip.SipSession.Listener;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.widget.Toast;
 
 import com.example.words.R;
@@ -15,7 +17,7 @@ import com.example.words.R;
 public class Util {
 	Context context;
 	WordDictionary myDictionary;
-	TextToSpeech tts;
+	public TextToSpeech tts;
 	public Util(Context c) {
 		this.context = c;
 		tts = new TextToSpeech(c.getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -24,10 +26,10 @@ public class Util {
 				if(status != TextToSpeech.ERROR){
 					tts.setLanguage(Locale.US);
 				}else{
-					/*Toast t = Toast.makeText(getApplicationContext(), 
+					Toast t = Toast.makeText(Util.this.context.getApplicationContext(), 
 							"Text To Speech is not supported", 
 							Toast.LENGTH_SHORT);
-					t.show();*/
+					t.show();
 				}
 			}
 		});
