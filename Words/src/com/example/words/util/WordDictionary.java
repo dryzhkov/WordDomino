@@ -20,14 +20,14 @@ public class WordDictionary {
 	 * Add new word to the dictionary
 	 */
 	public void Add(String newWord){
-		Find(newWord, true);
+		Find(newWord, true, false);
 	}
 	
 	/*
 	 * Returns true if words is contained in the dictionary
 	 */
-	public boolean Contains(String word){
-		return Find(word, false);
+	public boolean Contains(String word, boolean markAsPlayed){
+		return Find(word, false, true);
 	}
 	
 	/*
@@ -68,10 +68,9 @@ public class WordDictionary {
 	}
 	
 	@SuppressLint("DefaultLocale") 
-	private boolean Find(String word, boolean shouldAdd){
+	private boolean Find(String word, boolean shouldAdd, boolean markAsPlayed){
 		Validate(word); //validate input
 		word = word.toLowerCase(); //treat all letters as lower case
-		word.replace(" ", ""); //remove all white spaces
 		WordArrayNode cur = root; //pointer to the first array of nodes
 		
 		for(int i = 0; i < word.length(); i++){
@@ -95,6 +94,9 @@ public class WordDictionary {
 				if(shouldAdd){
 					curNode.isWord = true;
 				}else{
+					if(curNode.isWord && markAsPlayed){
+						curNode.isPlayed = true;
+					}
 					return curNode.isWord;
 				}
 			}else{
@@ -135,10 +137,13 @@ class WordArrayNode{
 }
 
 class WordNode{
-	public boolean isWord;
+	public boolean isWord; //indicates last char of a valid word
+	public boolean isPlayed; //indicates that a word has been played
 	public WordArrayNode children;
 	
 	public WordNode(){
 		this.children = new WordArrayNode();
+		this.isWord = false;
+		this.isPlayed = false;
 	}
 }
