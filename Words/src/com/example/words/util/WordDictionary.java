@@ -1,19 +1,20 @@
 package com.example.words.util;
 
 import android.annotation.SuppressLint;
+import java.util.ArrayList;
 import java.util.Random;
 /*
  * Dictionary manages our word database
  */
 public class WordDictionary {
-	private WordArrayNode root;
+	private WordNode root;
 	private static final char firstLetter = 'a';
 	private static final int minWordLength = 2;
 	private static final int arrayLowerBound = 0;
 	private static final int arrayUpperBound = 26; //26 letters + space char
 	
 	public WordDictionary(){
-		root = new WordArrayNode();
+		root = new WordNode();
 	}
 	
 	/*
@@ -26,61 +27,98 @@ public class WordDictionary {
 	/*
 	 * Returns true if words is contained in the dictionary
 	 */
-	public boolean Contains(String word, boolean markAsPlayed){
+	public boolean Contains(String word){
+		return Find(word, false, false);
+	}
+	
+	/*
+	 * Returns true if words is contained in the dictionary and marks it as used
+	 */
+	public boolean Get(String word){
 		return Find(word, false, true);
 	}
 	
 	/*
-	 * Returns a randomly selected word, if not found in 10 seconds returns empty string
+	 * Returns a randomly selected word
 	 */
 	public String GetRandomWord(){
-		StringBuilder rsl = new StringBuilder();
 		Random r = new Random();
-		boolean foundWord = false;
-		WordArrayNode cur = root;
-		WordNode curNode = null;
-		long maxRunInMiliseconds = 10000;
-		long startTime = System.currentTimeMillis();
-		long currentTime = startTime;
+		int randomIndex = r.nextInt(arrayUpperBound + 1);
 		
-		while(maxRunInMiliseconds > currentTime - startTime){
-			//pick a random node
-			int randomIndex = r.nextInt(arrayUpperBound + 1);
-			curNode = cur.nodes[randomIndex];
-
-			if(curNode != null){
-				rsl.append(ItoA(randomIndex)); //add current letter to an existing collection
-				
-				if(curNode.isWord){ //are we done?
-					foundWord = true;
-					System.out.println("Found a word hurray!!!");
-					break;
-				}else{
-					//move current one level down
-					cur = curNode.children;
-				}
-			}
-			//update current time
-			currentTime = System.currentTimeMillis();
+		//There is a possibility of returning empty string if randomIndex points at the letter that is not in the root level.
+		return FindAnswer(ItoA(randomIndex));
+	}
+	
+	/*
+	 * Returns an answer to a given letter, mark the words as used
+	 */
+	public String FindAnswer(char startChar){
+		String answer = "";
+		ArrayList<String> words = GetWordsStartingWith(startChar, true);
+		if(words != null && words.size() > 0){
+			//array words now contains all words that start with a given letter and have not been played yet.
+			//this is where we want to put the 'smart' logic for picking a next word that AI will say
+			//for now, just picking it randomly
+			Random r = new Random();
+			int randomIndex = r.nextInt(words.size());
+			answer = words.get(randomIndex);
+			
+			//mark answer as used
+			Get(answer);
 		}
-		
-		return (foundWord ? rsl.toString() : "");
+		return answer;
+	}
+	
+	/*
+	 * Returns a list of all words that start with a given letter
+	 */
+	public ArrayList<String> GetWordsStartingWith(char start, boolean excludeUsedWords){
+		int asciiIndex = AtoI(start);
+		if(asciiIndex < arrayLowerBound || asciiIndex > arrayUpperBound){
+			throw new IllegalArgumentException("WordDictionary::GetWordsStartingWith::Invalid letter: '" + start + "' ascii index: '" + asciiIndex + "'");
+		}
+		ArrayList<String> results = new ArrayList<String>();
+		StringBuilder curWord = new StringBuilder();
+		curWord.append(start);
+		WordNode parentNode = root.children[asciiIndex];
+		if(parentNode != null){
+			FindAllWords(parentNode, curWord, results, excludeUsedWords);
+		}
+		return results;
+	}
+	
+	private void FindAllWords(WordNode parentNode, StringBuilder curWord, ArrayList<String> results, boolean excludeUsedWords){
+		WordNode curNode;
+		for(int i = arrayLowerBound; i <= arrayUpperBound; i++){
+			curNode = parentNode.children[i];
+			if(curNode != null){
+				curWord.append(ItoA(i)); //add current letter to word
+				if(curNode.isWord && (!excludeUsedWords || !curNode.beenUsed)){
+					results.add(curWord.toString());
+				}
+				//recursively go down the list
+				FindAllWords(curNode, curWord, results, excludeUsedWords);
+				//remove last letter
+				curWord.deleteCharAt(curWord.length() - 1); 
+			}
+		}
 	}
 	
 	@SuppressLint("DefaultLocale") 
-	private boolean Find(String word, boolean shouldAdd, boolean markAsPlayed){
+	private boolean Find(String word, boolean shouldAdd, boolean markAsUsed){
 		Validate(word); //validate input
 		word = word.toLowerCase(); //treat all letters as lower case
-		WordArrayNode cur = root; //pointer to the first array of nodes
+		WordNode curNode = root; //pointer to the first array of nodes
 		
 		for(int i = 0; i < word.length(); i++){
 			char curLetter = word.charAt(i);
 			int asciiIndex = AtoI(curLetter);
+			
 			if(asciiIndex < arrayLowerBound || asciiIndex > arrayUpperBound){
 				throw new IllegalArgumentException("WordDictionary::Invalid letter: '" + word + "' in argument word: '" + curLetter + "' ascii index: '" + asciiIndex + "'");
 			}
-			WordNode[] curNodesArray = cur.nodes;
-			WordNode curNode = curNodesArray[asciiIndex];
+			WordNode[] curNodesArray = curNode.children; //move to the next child
+			curNode = curNodesArray[asciiIndex];
 			if(curNode == null){
 				if(shouldAdd){
 					curNode = new WordNode();
@@ -94,13 +132,11 @@ public class WordDictionary {
 				if(shouldAdd){
 					curNode.isWord = true;
 				}else{
-					if(curNode.isWord && markAsPlayed){
-						curNode.isPlayed = true;
+					if(curNode.isWord && markAsUsed){
+						curNode.beenUsed = true;
 					}
 					return curNode.isWord;
 				}
-			}else{
-				cur = curNode.children; //move to the next child
 			}
 		}
 		return true;
@@ -125,25 +161,16 @@ public class WordDictionary {
 		}
 		return (char) (i + firstLetter);
 	}
-	
-}
-
-class WordArrayNode{
-	public WordNode[] nodes;
-	
-	public WordArrayNode(){
-		nodes = new WordNode[27]; //keep in sync with arrayUpperBound + 1 in WordDictionary
-	}
 }
 
 class WordNode{
 	public boolean isWord; //indicates last char of a valid word
-	public boolean isPlayed; //indicates that a word has been played
-	public WordArrayNode children;
+	public boolean beenUsed; //indicates that a word has been played
+	public WordNode[] children;
 	
 	public WordNode(){
-		this.children = new WordArrayNode();
+		this.children = new WordNode[27];
 		this.isWord = false;
-		this.isPlayed = false;
+		this.beenUsed = false;
 	}
 }
