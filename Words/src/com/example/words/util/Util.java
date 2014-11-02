@@ -7,20 +7,18 @@ import java.io.InputStreamReader;
 import java.util.Locale;
 
 import android.content.Context;
-import android.net.sip.SipSession.Listener;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.UtteranceProgressListener;
 import android.widget.Toast;
 
 import com.example.words.R;
 
 public class Util {
-	Context context;
-	WordDictionary myDictionary;
+	private Context context;
+	private WordDictionary myDictionary;
 	public TextToSpeech tts;
-	public Util() {}
 	
-	public WordDictionary LoadWordsFromFile(){
+	public WordDictionary LoadWordsFromFile(Context c){
+		this.context = c;
     	myDictionary = new WordDictionary();
     	InputStream ins = this.context.getResources().openRawResource(R.raw.cities);
         BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
@@ -57,6 +55,7 @@ public class Util {
 				}
 			}
 		});
+		
 	}
 	
 	public void SpeakText(String str) {

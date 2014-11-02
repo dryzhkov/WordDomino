@@ -18,16 +18,16 @@ import android.speech.tts.UtteranceProgressListener;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 
 public class QuickStart extends Activity {
 	protected static final int RESULT_SPEECH = 1;
+	protected static final int TIME_TO_WAIT = 5000;
+	protected static final int TIME_INCREMENTS = 1000;
 	
 	private WordDictionary wd;
 	private TextView QTV;
 	private Util u;
-	private Context c;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +43,11 @@ public class QuickStart extends Activity {
 	
 	protected void onStart() {
 		super.onStart();
-		new CountDownTimer(5000, 1000) {
+		new CountDownTimer(TIME_TO_WAIT, TIME_INCREMENTS) {
 		     public void onTick(long millisUntilFinished) {
-		    	 String strNumOfSeconds = Long.toString(millisUntilFinished / 1000);
+		    	 String strNumOfSeconds = Long.toString(millisUntilFinished / TIME_INCREMENTS);
 		    	 String toSpeak = strNumOfSeconds;
-		    	 QTV.setText("Game starts in: " + millisUntilFinished / 1000);
+		    	 QTV.setText("Game starts in: " + millisUntilFinished / TIME_INCREMENTS);
 		    	 u.SpeakText(toSpeak);
 		     }
 
