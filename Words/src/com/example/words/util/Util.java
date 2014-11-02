@@ -18,22 +18,7 @@ public class Util {
 	Context context;
 	WordDictionary myDictionary;
 	public TextToSpeech tts;
-	public Util(Context c) {
-		this.context = c;
-		tts = new TextToSpeech(c.getApplicationContext(), new TextToSpeech.OnInitListener() {
-			@Override
-			public void onInit(int status) {
-				if(status != TextToSpeech.ERROR){
-					tts.setLanguage(Locale.US);
-				}else{
-					Toast t = Toast.makeText(Util.this.context.getApplicationContext(), 
-							"Text To Speech is not supported", 
-							Toast.LENGTH_SHORT);
-					t.show();
-				}
-			}
-		});
-	}
+	public Util() {}
 	
 	public WordDictionary LoadWordsFromFile(){
     	myDictionary = new WordDictionary();
@@ -56,6 +41,23 @@ public class Util {
 		}
 		return myDictionary;
     }
+	
+	public void SetUpTTS(Context c){
+		this.context = c;
+		tts = new TextToSpeech(c.getApplicationContext(), new TextToSpeech.OnInitListener() {
+			@Override
+			public void onInit(int status) {
+				if(status != TextToSpeech.ERROR){
+					tts.setLanguage(Locale.US);
+				}else{
+					Toast t = Toast.makeText(Util.this.context.getApplicationContext(), 
+							"Text To Speech is not supported", 
+							Toast.LENGTH_SHORT);
+					t.show();
+				}
+			}
+		});
+	}
 	
 	public void SpeakText(String str) {
 		tts.speak(str, TextToSpeech.QUEUE_FLUSH, null);

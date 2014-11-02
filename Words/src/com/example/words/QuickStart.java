@@ -24,24 +24,26 @@ import android.content.Intent;
 public class QuickStart extends Activity {
 	protected static final int RESULT_SPEECH = 1;
 	
-	WordDictionary wd;
-	TextView QTV;
-	Util u;
-	Context c;
+	private WordDictionary wd;
+	private TextView QTV;
+	private Util u;
+	private Context c;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_game);
-        u = new Util(this);
+        u = new Util();
+        
+        // Set up the text to speech by passing it the context
+        u.SetUpTTS(this);
         wd = u.LoadWordsFromFile();
         QTV = (TextView)findViewById(R.id.quick_start_askquestion);
     }
 	
 	protected void onStart() {
 		super.onStart();
-		new CountDownTimer(6000, 1000) {
-			 Boolean saidInstruction = false;
+		new CountDownTimer(5000, 1000) {
 		     public void onTick(long millisUntilFinished) {
 		    	 String strNumOfSeconds = Long.toString(millisUntilFinished / 1000);
 		    	 String toSpeak = strNumOfSeconds;
