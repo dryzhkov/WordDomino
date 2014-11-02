@@ -37,7 +37,7 @@ public class QuickStart extends Activity {
         
         // Set up the text to speech by passing it the context
         u.SetUpTTS(this);
-        wd = u.LoadWordsFromFile();
+        wd = u.LoadWordsFromFile(this);
         QTV = (TextView)findViewById(R.id.quick_start_askquestion);
     }
 	
