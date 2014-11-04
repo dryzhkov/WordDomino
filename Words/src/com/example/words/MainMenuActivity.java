@@ -45,7 +45,8 @@ public class MainMenuActivity extends Activity {
     	Toast.makeText(getApplicationContext(),
     		      "Settings Clicked!", 
     		      Toast.LENGTH_LONG).show();
-
+    	Intent intent = new Intent(this, SettingsActivity.class);
+    	startActivity(intent);
     }
     
     public void HighScores_Clicked(View view)

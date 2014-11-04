@@ -1,8 +1,10 @@
 package com.example.words.util;
 
+
 import android.annotation.SuppressLint;
 import java.util.ArrayList;
 import java.util.Random;
+
 /*
  * Dictionary manages our word database
  */
@@ -57,8 +59,7 @@ public class WordDictionary {
 		ArrayList<String> words = GetWordsStartingWith(startChar, true);
 		if(words != null && words.size() > 0){
 			//array words now contains all words that start with a given letter and have not been played yet.
-			//this is where we want to put the 'smart' logic for picking a next word that AI will say
-			//for now, just picking it randomly
+			//the words are also picked based on appropriate game difficulty
 			Random r = new Random();
 			int randomIndex = r.nextInt(words.size());
 			answer = words.get(randomIndex);
@@ -93,7 +94,9 @@ public class WordDictionary {
 			curNode = parentNode.children[i];
 			if(curNode != null){
 				curWord.append(ItoA(i)); //add current letter to word
-				if(curNode.isWord && (!excludeUsedWords || !curNode.beenUsed)){
+				if(curNode.isWord //is a valid word
+						&& (!excludeUsedWords || !curNode.beenUsed) //exclude words that have been used, if needed
+						&& ((Configuration.GameDifficulty & curNode.difficulty) == curNode.difficulty)){ //match based on game difficulty level
 					results.add(curWord.toString());
 				}
 				//recursively go down the list
@@ -131,6 +134,8 @@ public class WordDictionary {
 			if(i == word.length() - 1){ //last letter in the word
 				if(shouldAdd){
 					curNode.isWord = true;
+					//look up difficulty ranking
+					curNode.difficulty = Configuration.LetterRanking[asciiIndex];
 				}else{
 					if(curNode.isWord && markAsUsed){
 						curNode.beenUsed = true;
@@ -167,6 +172,7 @@ class WordNode{
 	public boolean isWord; //indicates last char of a valid word
 	public boolean beenUsed; //indicates that a word has been played
 	public WordNode[] children;
+	public int difficulty;
 	
 	public WordNode(){
 		this.children = new WordNode[27];
