@@ -37,7 +37,7 @@ public class SettingsActivity extends Activity {
 	private void LoadGameDifficulty(){
 		SharedPreferences settings = getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
 		Configuration.GameDifficulty = settings.getInt(GAME_DIFF_KEY, Configuration.DifficultyLevel.EASY);
-		
+				
 		if(Configuration.GameDifficulty == Configuration.DifficultyLevel.HARD){
 			radioButtonGroup.check(R.id.rb_gamediff_hard);
 		}else if(Configuration.GameDifficulty == Configuration.DifficultyLevel.MEDIUM){
@@ -48,10 +48,12 @@ public class SettingsActivity extends Activity {
 	}
 	
 	private void SaveGameDifficulty(){
-		int selectedOption = radioButtonGroup.getCheckedRadioButtonId();
-		if(selectedOption == 2){
+		int selectedOptionId = radioButtonGroup.getCheckedRadioButtonId();
+		View selectedButton = radioButtonGroup.findViewById(selectedOptionId);
+		int selectedIndex = radioButtonGroup.indexOfChild(selectedButton);
+		if(selectedIndex == 2){
 			Configuration.GameDifficulty = Configuration.DifficultyLevel.HARD;
-		}else if(selectedOption == 1){
+		}else if(selectedIndex == 1){
 			Configuration.GameDifficulty = Configuration.DifficultyLevel.MEDIUM;
 		}else{ //default: easy
 			Configuration.GameDifficulty = Configuration.DifficultyLevel.EASY;

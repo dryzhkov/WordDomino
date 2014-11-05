@@ -36,7 +36,7 @@ public class WordDictionary {
 	/*
 	 * Returns true if words is contained in the dictionary and marks it as used
 	 */
-	public boolean Get(String word){
+	public boolean MarkAsUsed(String word){
 		return Find(word, false, true);
 	}
 	
@@ -65,7 +65,7 @@ public class WordDictionary {
 			answer = words.get(randomIndex);
 			
 			//mark answer as used
-			Get(answer);
+			MarkAsUsed(answer);
 		}
 		return answer;
 	}
