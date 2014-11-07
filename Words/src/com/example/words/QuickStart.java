@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
@@ -22,13 +23,16 @@ import android.content.Intent;
 
 public class QuickStart extends Activity {
 	protected static final int RESULT_SPEECH = 1;
-	protected static final int TIME_TO_WAIT = 5000;
-	protected static final int TIME_INCREMENTS = 1000;
+	protected static final int START_TIME_TO_WAIT = 5000;
+	protected static final int TIME_INCREMENT = 1000;
+	
+	protected static final int RETORT_WAIT_TIME = 2000;
 	
 	private WordDictionary wd;
 	private TextView QTV;
 	private Util u;
-	
+	private long timeStartedListening;
+
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,18 +47,18 @@ public class QuickStart extends Activity {
 	
 	protected void onStart() {
 		super.onStart();
-		new CountDownTimer(TIME_TO_WAIT, TIME_INCREMENTS) {
-		     public void onTick(long millisUntilFinished) {
-		    	 String strNumOfSeconds = Long.toString(millisUntilFinished / TIME_INCREMENTS);
-		    	 String toSpeak = strNumOfSeconds;
-		    	 QTV.setText("Game starts in: " + millisUntilFinished / TIME_INCREMENTS);
-		    	 u.SpeakText(toSpeak);
-		     }
-
-		     public void onFinish() {
-		         StartCityLetterGame();
-		     }
-		  }.start();
+		new CountDownTimer(START_TIME_TO_WAIT, TIME_INCREMENT) {
+			 public void onTick(long millisUntilFinished) {
+				 String strNumOfSeconds = Long.toString(millisUntilFinished / TIME_INCREMENT);
+				 String toSpeak = strNumOfSeconds;
+				 QTV.setText("Game starts in: " + millisUntilFinished / TIME_INCREMENT);
+				 u.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+			 }
+			
+			 public void onFinish() {
+			     StartCityLetterGame();
+			 }
+		}.start();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
@@ -66,8 +70,8 @@ public class QuickStart extends Activity {
 			
 			@Override
 			public void onStart(String utteranceId) {
-				// TODO Auto-generated method stub
-				
+				// Need to log the time that we started listening
+			    timeStartedListening = System.nanoTime();
 			}
 			
 			@Override
@@ -92,10 +96,25 @@ public class QuickStart extends Activity {
 	
 	private void SetUpListen() {
 		Intent myIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-		myIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
-		
+		myIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");		 
+		 
 		try{
 			startActivityForResult(myIntent, RESULT_SPEECH);
+			
+			new CountDownTimer(START_TIME_TO_WAIT, TIME_INCREMENT) {
+				 public void onTick(long millisUntilFinished) {
+					 String strNumOfSeconds = Long.toString(millisUntilFinished / TIME_INCREMENT);
+					 String toSpeak = strNumOfSeconds;
+					 QTV.setText("Game starts in: " + millisUntilFinished / TIME_INCREMENT);
+					 u.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+				 }
+				
+				 public void onFinish() {
+				     StartCityLetterGame();
+				 }
+			}.start();
+			
+			
 		}catch (ActivityNotFoundException aex){
 			Toast t = Toast.makeText(getApplicationContext(), 
 										"Your device doesn't support Speech to Text", 
@@ -108,6 +127,7 @@ public class QuickStart extends Activity {
 			t.show();
 		}
 	}
+	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
  
@@ -115,10 +135,36 @@ public class QuickStart extends Activity {
 	        case RESULT_SPEECH: {
 	            if (resultCode == RESULT_OK && null != data) {
 	            	ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-	            	QTV.setText(text.get(0));
+	            	long timeStoppedListening = System.nanoTime();
+	            	double totalTime = (timeStoppedListening - timeStartedListening) / 1000000;
+	            	QTV.setText(text.get(0) + " took " + Double.toString(totalTime) + " milliseconds");
+	            	
+	            	retort("");
 	            }
 	            break;
 	        }
         }
     }
+	
+	protected void retort(String answer) {
+		// Wait some time before she responds
+		Handler handler = new Handler(); 
+	    handler.postDelayed(new Runnable() { 
+	         public void run() { 
+	         } 
+	    }, RETORT_WAIT_TIME);
+	    
+	    if (answer == "") {
+	    	// Incorrect answer will pass an empty value
+	    	String toSpeak = "Wow, you suck";
+	    	QTV.setText(toSpeak);
+	    	u.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+	    } else {
+	    	// Correct answer
+	    	String toSpeak = "Huzzah!";
+	    	QTV.setText(toSpeak);
+	    	u.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+	    }
+	    
+	}
 }

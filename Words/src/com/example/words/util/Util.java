@@ -57,8 +57,4 @@ public class Util {
 		});
 		
 	}
-	
-	public void SpeakText(String str) {
-		tts.speak(str, TextToSpeech.QUEUE_FLUSH, null);
-	}
 }
