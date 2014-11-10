@@ -10,30 +10,30 @@ public class Configuration {
 	}
 	
 	public static int[] LetterRanking = new int[]
-			{Configuration.DifficultyLevel.EASY, /* a */
-			 Configuration.DifficultyLevel.EASY, /* b */
-			 Configuration.DifficultyLevel.EASY, /* c */
-			 Configuration.DifficultyLevel.MEDIUM, /* d */
-			 Configuration.DifficultyLevel.MEDIUM, /* e */
-			 Configuration.DifficultyLevel.MEDIUM, /* f */
-			 Configuration.DifficultyLevel.EASY, /* g */
-			 Configuration.DifficultyLevel.EASY, /* h */
-			 Configuration.DifficultyLevel.HARD, /* i */
-			 Configuration.DifficultyLevel.HARD, /* j */
-			 Configuration.DifficultyLevel.HARD, /* k */
-			 Configuration.DifficultyLevel.EASY, /* l */
-			 Configuration.DifficultyLevel.EASY, /* m */
-			 Configuration.DifficultyLevel.MEDIUM, /* n */
-			 Configuration.DifficultyLevel.HARD, /* o */
-			 Configuration.DifficultyLevel.EASY, /* p */
-			 Configuration.DifficultyLevel.HARD, /* q */
-			 Configuration.DifficultyLevel.EASY, /* r */
-			 Configuration.DifficultyLevel.EASY, /* s */
-			 Configuration.DifficultyLevel.MEDIUM, /* t */
-			 Configuration.DifficultyLevel.HARD, /* u */
-			 Configuration.DifficultyLevel.HARD, /* v */
-			 Configuration.DifficultyLevel.EASY, /* w */
-			 Configuration.DifficultyLevel.HARD, /* x */
-			 Configuration.DifficultyLevel.HARD, /* y */
-			 Configuration.DifficultyLevel.HARD, /* z */};
+			{DifficultyLevel.EASY, /* a */
+			 DifficultyLevel.EASY, /* b */
+			 DifficultyLevel.EASY, /* c */
+			 DifficultyLevel.MEDIUM, /* d */
+			 DifficultyLevel.MEDIUM, /* e */
+			 DifficultyLevel.MEDIUM, /* f */
+			 DifficultyLevel.EASY, /* g */
+			 DifficultyLevel.EASY, /* h */
+			 DifficultyLevel.HARD, /* i */
+			 DifficultyLevel.HARD, /* j */
+			 DifficultyLevel.HARD, /* k */
+			 DifficultyLevel.EASY, /* l */
+			 DifficultyLevel.EASY, /* m */
+			 DifficultyLevel.MEDIUM, /* n */
+			 DifficultyLevel.HARD, /* o */
+			 DifficultyLevel.EASY, /* p */
+			 DifficultyLevel.HARD, /* q */
+			 DifficultyLevel.EASY, /* r */
+			 DifficultyLevel.EASY, /* s */
+			 DifficultyLevel.MEDIUM, /* t */
+			 DifficultyLevel.HARD, /* u */
+			 DifficultyLevel.HARD, /* v */
+			 DifficultyLevel.EASY, /* w */
+			 DifficultyLevel.HARD, /* x */
+			 DifficultyLevel.HARD, /* y */
+			 DifficultyLevel.HARD, /* z */};
 }
