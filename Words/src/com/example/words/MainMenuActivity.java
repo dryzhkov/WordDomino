@@ -17,16 +17,18 @@ public class MainMenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         //setup here
         /*
-        SAMPLE: how to use StatsManager class
+        //SAMPLE: how to use StatsManager class
         Configuration.LoadGameDifficulty(this);
         StatsManager myStatsManager = new StatsManager(this);
-        if(myStatsManager.IsValid()) {
+        if(myStatsManager.IsInitiated()) {
             myStatsManager.IncrementTotalGames(Configuration.GameDifficulty);
             myStatsManager.UpdateHighestScore(400, Configuration.GameDifficulty);
             myStatsManager.UpdateStreak(25, Configuration.GameDifficulty);
+            StatsManager.Letter myLetter = myStatsManager.GetBestLetter();
             myStatsManager.SaveStats();
         }
         */
+
 
         setContentView(R.layout.main_menu);
     }

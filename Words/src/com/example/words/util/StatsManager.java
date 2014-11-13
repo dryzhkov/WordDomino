@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.gson.Gson;
@@ -16,23 +17,18 @@ import com.google.gson.Gson;
  * Created by dima on 11/9/2014.
  */
 public class StatsManager {
-    private final String fileName = "statistics.xml";
-    private final String dirName = "data";
+    private static final String FILE_NAME = "statistics.xml";
+    private static final String DIR_NAME = "data";
     private PlayerStats playerStats;
     private Context context;
-    /*
-        TODO:
-        Best / Worst letter: * Take top 20% of the whole game letters by appearance count and
-        then from there select the best ratio from within that letter. Ex: if a shows up 100 time, B 99, C 98 ....
-        and x was 1. Then x gets ruled out and of the ones that are left, we select the best one of those letters as it is compared to it's own kind. B had 50 successful out of 98 B letter words.
-     */
+
     public StatsManager(Context c){
         this.context = c;
         //load player stats
         this.LoadStats();
     }
 
-    public boolean IsValid(){
+    public boolean IsInitiated(){
         return (this.playerStats != null);
     }
 
@@ -59,6 +55,10 @@ public class StatsManager {
         }
     }
 
+    public int GetLongestStreak(int diffLevel){
+        return this.playerStats.gameRecords.get(diffLevel).GetStreak();
+    }
+
     public void UpdateHighestScore(int value, int diffLevel){
         if(value < 0){
             return;
@@ -70,9 +70,17 @@ public class StatsManager {
         }
     }
 
+    public int GetHighestScore(int diffLevel){
+        return this.playerStats.gameRecords.get(diffLevel).GetHighestScore();
+    }
+
     public void IncrementTotalGames(int diffLevel){
         GameRecord record = this.playerStats.gameRecords.get(diffLevel);
         record.SetTotalGames(record.GetTotalGames() + 1);
+    }
+
+    public int GetTotalGames(int diffLevel){
+        return this.playerStats.gameRecords.get(diffLevel).GetTotalGames();
     }
 
     public void UpdateLetterProgress(String word, boolean playerSuccess){
@@ -87,6 +95,25 @@ public class StatsManager {
             //player answer was correct, increment success count by 1
             letter.SetSuccessCount(letter.GetSuccessCount() + 1);
         }
+    }
+
+    public Letter GetBestLetter(){
+        Letter[] temp = this.playerStats.letterProgress;
+        //sort letter array by total count
+        Arrays.sort(temp);
+        //select best ratio from top 20%
+        int lastIndex = temp.length - temp.length / 5;
+        int bestIndex = temp.length - 1;
+        double bestRatio = 0;
+        for(int i = temp.length - 1; i >= lastIndex; i--){
+            Letter curLetter = temp[i];
+            double curRatio = curLetter.GetSuccessRatio();
+            if(curRatio > bestRatio){
+                bestRatio = curRatio;
+                bestIndex = i;
+            }
+        }
+        return temp[bestIndex];
     }
 
     private void LoadStats(){
@@ -114,8 +141,8 @@ public class StatsManager {
     }
 
     private File EnsureFileExists() throws IOException {
-        File targetDir = this.context.getDir(this.dirName, Context.MODE_PRIVATE);
-        File targetFile = new File(targetDir, fileName);
+        File targetDir = this.context.getDir(DIR_NAME, Context.MODE_PRIVATE);
+        File targetFile = new File(targetDir, FILE_NAME);
         //targetFile.delete();
         if(!targetFile.exists()) {
             targetFile.createNewFile();
@@ -126,7 +153,7 @@ public class StatsManager {
     protected class PlayerStats{
         private Map<Integer, GameRecord> gameRecords;
         private Letter[] letterProgress;
-        private static final int letterCount = 26;
+        private static final int LETTER_COUNT = 26;
         public PlayerStats(){
             //initialize game records
             this.gameRecords = new HashMap<Integer, GameRecord>();
@@ -134,8 +161,8 @@ public class StatsManager {
             this.gameRecords.put(Configuration.DifficultyLevel.MEDIUM, new GameRecord());
             this.gameRecords.put(Configuration.DifficultyLevel.HARD, new GameRecord());
             //initialize letter progress
-            this.letterProgress = new Letter[letterCount];
-            for(int i = 0; i < letterCount; i++){
+            this.letterProgress = new Letter[LETTER_COUNT];
+            for(int i = 0; i < LETTER_COUNT; i++){
                 this.letterProgress[i] = new Letter(Util.ItoA(i));
             }
         }
@@ -171,7 +198,7 @@ public class StatsManager {
         }
     }
 
-    protected class Letter {
+    public class Letter implements Comparable<Letter> {
         private char character;
         private int successCount;
         private int totalCount;
@@ -200,12 +227,17 @@ public class StatsManager {
             this.totalCount = i;
         }
 
-        public double GetSuccessRation(){
+        public double GetSuccessRatio(){
             if(this.totalCount == 0){
                 return 0d;
             }
             //round to 2 decimals
             return Math.round(this.successCount / this.totalCount * 100) / 100;
+        }
+
+        @Override
+        public int compareTo(Letter other){
+            return this.totalCount - other.totalCount;
         }
     }
 }
