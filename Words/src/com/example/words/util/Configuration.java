@@ -2,12 +2,15 @@ package com.example.words.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 
 public class Configuration {
     public static final String PREFERENCES_KEY = "WORDS_APP_PREF_FILE";
     public static final String GAME_DIFF_KEY = "GAME_DIFFICULTY";
-
+    public static final String FIRST_PLAYER_KEY = "FIRST_PLAYER";
     public static int GameDifficulty;
+    public static int FirstPlayer;
+
     public static int[] LetterRanking = new int[]
     {        DifficultyLevel.EASY, /* a */
              DifficultyLevel.EASY, /* b */
@@ -41,14 +44,23 @@ public class Configuration {
         public static final int MEDIUM = 3;
         public static final int HARD = 7;
     }
-    public static void LoadGameDifficulty(Context context){
-        SharedPreferences settings = context.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
-        Configuration.GameDifficulty = settings.getInt(GAME_DIFF_KEY, Configuration.DifficultyLevel.EASY);
+
+    public class PlayerType{
+        public static final int AI = 0;
+        public static final int Player = 1;
     }
-    public static void SaveGameDifficulty(Context context, int diffLevel){
+
+    public static void LoadSettings(Context context){
+        SharedPreferences settings = context.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+        GameDifficulty = settings.getInt(GAME_DIFF_KEY, DifficultyLevel.EASY);
+        FirstPlayer = settings.getInt(FIRST_PLAYER_KEY, PlayerType.AI);
+    }
+
+    public static void SaveSettings(Context context){
         SharedPreferences settings = context.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putInt(GAME_DIFF_KEY, diffLevel);
+        editor.putInt(GAME_DIFF_KEY, GameDifficulty);
+        editor.putInt(FIRST_PLAYER_KEY, FirstPlayer);
         editor.commit();
     }
 }

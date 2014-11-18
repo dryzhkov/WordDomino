@@ -3,6 +3,13 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/game_difficulty_title"
+        android:id="@+id/textView" />
+
     <RadioGroup
         android:id="@+id/radioGroupGameDiff"
         android:layout_width="wrap_content"
@@ -29,11 +36,39 @@
 
     </RadioGroup>
 
-    <Button
-        android:id="@+id/button"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/first_player_title"
+        android:id="@+id/textView2" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioGroupFirstPlayer">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/first_player_ai"
+            android:id="@+id/rb_firstplayer_ai"
+            android:checked="true" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/first_player_player"
+            android:id="@+id/rb_firstplayer_player" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="155dp"
+        android:layout_height="wrap_content"
         android:onClick="btnSave_Clicked"
-        android:text="@string/btn_save_label" />
+        android:text="@string/btn_save_label"
+        android:longClickable="false" />
 
 </LinearLayout>
