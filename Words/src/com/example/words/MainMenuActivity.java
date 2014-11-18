@@ -33,12 +33,9 @@ public class MainMenuActivity extends Activity {
         setContentView(R.layout.main_menu);
     }
 
-    public void QuickStart_Clicked(View view)
+    public void StartGame_Clicked(View view)
     {
-        Toast.makeText(getApplicationContext(),
-                  "Quick Start Clicked!",
-                  Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(this, QuickStart.class);
+        Intent intent = new Intent(this, StartGame.class);
         startActivity(intent);
 
     }

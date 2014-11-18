@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import com.example.words.util.Configuration;
+import com.example.words.util.Game;
 import com.example.words.util.Util;
 import com.example.words.util.WordDictionary;
 
@@ -16,12 +18,13 @@ import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 
-public class QuickStart extends Activity {
+public class StartGame extends Activity {
 	protected static final int RESULT_SPEECH = 1;
 	protected static final int START_TIME_TO_WAIT = 5000;
 	protected static final int TIME_INCREMENT = 1000;
@@ -32,6 +35,10 @@ public class QuickStart extends Activity {
 	private TextView QTV;
 	private Util u;
 	private long timeStartedListening;
+	private Game gg;
+	
+	// UtteranceProgressListener can't take params so we resort to this bs
+	private String lastAnswer;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,9 @@ public class QuickStart extends Activity {
         u.SetUpTTS(this);
         wd = u.LoadWordsFromFile(this);
         QTV = (TextView)findViewById(R.id.quick_start_askquestion);
+        
+        Configuration.LoadGameDifficulty(this);
+        gg = new Game(this, Configuration.GameDifficulty);
     }
 	
 	protected void onStart() {
@@ -77,7 +87,7 @@ public class QuickStart extends Activity {
 			@Override
 			public void onError(String utteranceId) {
 				// TODO Auto-generated method stub
-				
+				QTV.setText("Error");
 			}
 			
 			@Override
@@ -139,32 +149,96 @@ public class QuickStart extends Activity {
 	            	double totalTime = (timeStoppedListening - timeStartedListening) / 1000000;
 	            	QTV.setText(text.get(0) + " took " + Double.toString(totalTime) + " milliseconds");
 	            	
-	            	retort("");
+	            	ProcessAnswer(text.get(0));
 	            }
 	            break;
 	        }
         }
     }
 	
-	protected void retort(String answer) {
+	protected void ProcessAnswer(String answer) {
+		this.lastAnswer = answer;
 		// Wait some time before she responds
 		Handler handler = new Handler(); 
 	    handler.postDelayed(new Runnable() { 
 	         public void run() { 
 	         } 
 	    }, RETORT_WAIT_TIME);
+	    	// They gave an answer, let's make sure that it was a valid one
+	    String toSpeak = "";
+	    if (wd.MarkAsUsed(answer)) {	    	
+    		toSpeak = answer + " is correct!";
+    	} else {
+	    	// Update the amount of strikes
+	    	int numOfStrikesLeft = gg.FailedAnswer();
+	    	
+	    	// Ruh Roh
+	    	if (numOfStrikesLeft < 0) {
+				// No more strikes, finish the game. You're OUT!
+        		gg.GameOver();
+        		
+        		toSpeak = "3 strikes, game is over.";
+    	    	QTV.setText(toSpeak);
+    	    	u.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+    	    	
+    	    	// Todo Go back to main menu
+    	    	return;
+	    	} else {
+	    		// We still have a few more strikes
+	    		if (numOfStrikesLeft == 0) {
+	    			toSpeak = "Incorrect. This is your last strike.";
+	    		} else {
+	    			toSpeak = "Incorrect, " + Integer.toString(numOfStrikesLeft + 1) + " strikes left.";
+	    		}
+	    	}
+    	}
+	    ProcessAnswerResponse(toSpeak);
+	}
+	
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+	protected void ProcessAnswerResponse(String toSpeak) {
+	   UtteranceProgressListener upl = new UtteranceProgressListener() {
+			
+			@Override
+			public void onStart(String utteranceId) {
+				// Need to log the time that we started listening
+			    timeStartedListening = System.nanoTime();
+			}
+			
+			@Override
+			public void onError(String utteranceId) {
+				// TODO Auto-generated method stub
+				QTV.setText("Error");
+			}
+			
+			@Override
+			public void onDone(String utteranceId) {
+				// Interesting bug, if I uncomment the setUpListen() she will call it. But will not call Retort?
+				// Am I missing something obvious?
+				//SetUpListen()
+				Retort();
+			}
+		};
+		u.tts.setOnUtteranceProgressListener(upl);
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+	    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,"ProcessAnswerResponse");
 	    
-	    if (answer == "") {
-	    	// Incorrect answer will pass an empty value
-	    	String toSpeak = "Wow, you suck";
-	    	QTV.setText(toSpeak);
-	    	u.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-	    } else {
-	    	// Correct answer
-	    	String toSpeak = "Huzzah!";
-	    	QTV.setText(toSpeak);
-	    	u.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-	    }
-	    
+		u.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, map); 
+	    QTV.setText(toSpeak);
+	}
+	
+	private void Retort() {
+		Toast.makeText(getApplicationContext(),
+                "In retort",
+                Toast.LENGTH_LONG).show();
+		char c = this.lastAnswer.charAt(0);
+
+		String retort = wd.FindAnswer(c);
+		
+		String toSpeak = "My turn. Something that starts with the letter " + Character.toUpperCase(c);
+		toSpeak += " How about...." + retort; 
+    	QTV.setText(toSpeak);
+    	u.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
 	}
 }

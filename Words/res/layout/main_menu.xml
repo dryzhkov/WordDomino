@@ -5,38 +5,27 @@
     android:orientation="vertical"
     tools:context="${relativePackage}.${activityClass}" >
 	
-    <RelativeLayout
+<RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" >
     
 	    <Button
-	        android:id="@+id/btnQuickStart"
+	        android:id="@+id/btnStartGame"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_centerHorizontal="true"
 	        android:layout_alignParentTop="true"
 	        android:gravity="center"
-	        android:onClick="QuickStart_Clicked"
-	        android:text="Quick Start" 
+	        android:onClick="StartGame_Clicked"
+	        android:text="Start Game" 
 	        style="?android:attr/borderlessButtonStyle" />
-	    
-	    <Button
-		    android:id="@+id/btnNewGame"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_below="@+id/btnQuickStart"
-		    android:gravity="center"
-		    android:layout_centerHorizontal="true"
-		    android:text="New Game"
-		    android:onClick="NewGame_Clicked"
-		    style="?android:attr/borderlessButtonStyle" />
-	    
+
 	    <Button
 		    android:id="@+id/btnLoadGame"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:layout_below="@+id/btnNewGame"
+		    android:layout_below="@+id/btnStartGame"
 		    android:gravity="center"
 		    android:layout_centerHorizontal="true"
 		    android:text="Load Game"

@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".QuickStart"
+            android:name=".StartGame"
             android:label="@string/app_name" >
         </activity>
         <activity
