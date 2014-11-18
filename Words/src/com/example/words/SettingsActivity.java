@@ -10,44 +10,55 @@ import android.view.View;
 import android.widget.RadioGroup;
 
 public class SettingsActivity extends Activity {
-    private RadioGroup radioButtonGroup;
+    private RadioGroup rgDifficulty;
+    private RadioGroup rgFirstPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        radioButtonGroup = (RadioGroup)findViewById(R.id.radioGroupGameDiff);
-        LoadGameDifficulty();
+        rgDifficulty = (RadioGroup)findViewById(R.id.radioGroupGameDiff);
+        rgFirstPlayer = (RadioGroup)findViewById(R.id.radioGroupFirstPlayer);
+        LoadSettings();
     }
 
     @Override
     protected void onStop(){
         super.onStop();
-        SaveGameDifficulty();
+        SaveSettings();
     }
 
     public void btnSave_Clicked(View view)
     {
-        SaveGameDifficulty();
+        SaveSettings();
         finish();
     }
 
-    private void LoadGameDifficulty(){
-        Configuration.LoadGameDifficulty(this);
+    private void LoadSettings(){
+        Configuration.LoadSettings(this);
 
+        //set game difficulty
         if(Configuration.GameDifficulty == Configuration.DifficultyLevel.HARD){
-            radioButtonGroup.check(R.id.rb_gamediff_hard);
+            rgDifficulty.check(R.id.rb_gamediff_hard);
         }else if(Configuration.GameDifficulty == Configuration.DifficultyLevel.MEDIUM){
-            radioButtonGroup.check(R.id.rb_gamediff_medium);
+            rgDifficulty.check(R.id.rb_gamediff_medium);
         }else{ //default: easy
-            radioButtonGroup.check(R.id.rb_gamediff_easy);
+            rgDifficulty.check(R.id.rb_gamediff_easy);
+        }
+
+        //set first player
+        if(Configuration.FirstPlayer == Configuration.PlayerType.Player){
+            rgFirstPlayer.check(R.id.rb_firstplayer_player);
+        }else{ //default: AI
+            rgFirstPlayer.check(R.id.rb_firstplayer_ai);
         }
     }
 
-    private void SaveGameDifficulty(){
-        int selectedOptionId = radioButtonGroup.getCheckedRadioButtonId();
-        View selectedButton = radioButtonGroup.findViewById(selectedOptionId);
-        int selectedIndex = radioButtonGroup.indexOfChild(selectedButton);
+    private void SaveSettings(){
+        //get game difficulty
+        int selectedOptionId = rgDifficulty.getCheckedRadioButtonId();
+        View selectedButton = rgDifficulty.findViewById(selectedOptionId);
+        int selectedIndex = rgDifficulty.indexOfChild(selectedButton);
         if(selectedIndex == 2){
             Configuration.GameDifficulty = Configuration.DifficultyLevel.HARD;
         }else if(selectedIndex == 1){
@@ -55,6 +66,17 @@ public class SettingsActivity extends Activity {
         }else{ //default: easy
             Configuration.GameDifficulty = Configuration.DifficultyLevel.EASY;
         }
-        Configuration.SaveGameDifficulty(this, Configuration.GameDifficulty);
+
+        selectedOptionId = rgFirstPlayer.getCheckedRadioButtonId();
+        selectedButton = rgFirstPlayer.findViewById(selectedOptionId);
+        selectedIndex = rgFirstPlayer.indexOfChild(selectedButton);
+
+        if(selectedIndex == 1){
+            Configuration.FirstPlayer = Configuration.PlayerType.Player;
+        }else{ //default: AI
+            Configuration.FirstPlayer = Configuration.PlayerType.AI;
+        }
+
+        Configuration.SaveSettings(this);
     }
 }

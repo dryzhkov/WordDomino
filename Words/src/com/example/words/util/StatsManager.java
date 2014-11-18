@@ -113,7 +113,7 @@ public class StatsManager {
                 bestIndex = i;
             }
         }
-        return temp[bestIndex];
+        return bestRatio > 0 ? temp[bestIndex] : null;
     }
 
     private void LoadStats(){
@@ -129,6 +129,7 @@ public class StatsManager {
                 }
                 line = reader.readLine();
             }
+
             if(data.length() > 0) {
                 this.playerStats =  new Gson().fromJson(data.toString(), PlayerStats.class);
             }else{ //empty file
@@ -232,7 +233,7 @@ public class StatsManager {
                 return 0d;
             }
             //round to 2 decimals
-            return Math.round(this.successCount / this.totalCount * 100) / 100;
+            return (double)Math.round((double)this.successCount / this.totalCount * 100) / 100;
         }
 
         @Override

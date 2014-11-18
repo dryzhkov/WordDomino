@@ -15,17 +15,32 @@ public class MainMenuActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setup here
         /*
+        //setup here
         //SAMPLE: how to use StatsManager class
-        Configuration.LoadGameDifficulty(this);
+        Configuration.LoadSettings(this);
         StatsManager myStatsManager = new StatsManager(this);
         if(myStatsManager.IsInitiated()) {
             myStatsManager.IncrementTotalGames(Configuration.GameDifficulty);
             myStatsManager.UpdateHighestScore(400, Configuration.GameDifficulty);
             myStatsManager.UpdateStreak(25, Configuration.GameDifficulty);
-            StatsManager.Letter myLetter = myStatsManager.GetBestLetter();
+
+
+            myStatsManager.UpdateLetterProgress("seattle", true);
+            myStatsManager.UpdateLetterProgress("seattle", false);
+            myStatsManager.UpdateLetterProgress("seattle", false);
+            myStatsManager.UpdateLetterProgress("seattle", false);
+            myStatsManager.UpdateLetterProgress("seattle", false);
+            myStatsManager.UpdateLetterProgress("amega", true);
+            myStatsManager.UpdateLetterProgress("amega", true);
+            myStatsManager.UpdateLetterProgress("amega", false);
+            myStatsManager.UpdateLetterProgress("amega", false);
+
+            myStatsManager.UpdateLetterProgress("xmen", true);
+            myStatsManager.UpdateLetterProgress("amega", false);
             myStatsManager.SaveStats();
+
+            StatsManager.Letter myLetter = myStatsManager.GetBestLetter();
         }
         */
 
