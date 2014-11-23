@@ -20,7 +20,7 @@ import com.google.gson.Gson;
 
 public class Game {
     // Constants
-    protected static final int DEFAULT_TIME_TO_WAIT = 5000;
+    protected static final double DEFAULT_TIME_TO_WAIT = 5000;
     protected static final int DEFAULT_NUM_OF_STRIKES = 3;
 
     // Private Variables
@@ -29,27 +29,25 @@ public class Game {
     private int longestStreak;
     private int currentStreak;
     private int numOfStrikesLeft;
-    private Set<String> FailedWords;
-    private Set<String> SuccessWords;
+    private Set<String> failedWords;
+    private Set<String> successWords;
     private int diffLevel;
     private Context context;
 
     /**
      * @param c
-     * @param difficulty
      */
-    public Game(Context c, int difficulty) {
+    public Game(Context c) {
         // Initialize
         this.timeLimit = DEFAULT_TIME_TO_WAIT;
         this.currentRunningScore = 0;
         this.longestStreak = 0;
         this.currentStreak = 0;
         this.numOfStrikesLeft = DEFAULT_NUM_OF_STRIKES;
-        this.FailedWords = new HashSet<String>();
-        this.SuccessWords = new HashSet<String>();
+        this.failedWords = new HashSet<String>();
+        this.successWords = new HashSet<String>();
 
         this.context = c;
-        this.diffLevel = difficulty;
     }
 
     /**
@@ -79,7 +77,7 @@ public class Game {
     public boolean AddFailedWord(String word) {
         // Add to FailedWords Set
         if (word != "") {
-            return FailedWords.add(word);
+            return failedWords.add(word);
         }
         return false;
     }
@@ -104,32 +102,30 @@ public class Game {
         return this.numOfStrikesLeft;
     }
 
-    public boolean GameOver() {
+    public void GameOver() {
         StatsManager sm = new StatsManager(this.context);
         if (sm.IsInitiated()) {
             // Increment total number of games
-            sm.IncrementTotalGames(this.diffLevel);
+            sm.IncrementTotalGames(Configuration.GameDifficulty);
 
             // High Score Update
-            sm.UpdateHighestScore(this.currentRunningScore, this.diffLevel);
+            sm.UpdateHighestScore(this.currentRunningScore, Configuration.GameDifficulty);
 
             // Update the Streak with the longest one
-            sm.UpdateStreak(this.longestStreak, this.diffLevel);
+            sm.UpdateStreak(this.longestStreak, Configuration.GameDifficulty);
 
             // Update the successful letters
-            for (String word : SuccessWords) {
+            for (String word : successWords) {
                 sm.UpdateLetterProgress(word, true);
             }
 
             // Update the Failed letters
-            for (String word : FailedWords) {
+            for (String word : failedWords) {
                 sm.UpdateLetterProgress(word, false);
             }
 
             sm.SaveStats();
         }
-
-        return true;
     }
 
     public double decreaseTimeLimit() {
