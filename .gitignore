@@ -1,0 +1,16 @@
+.metadata/*
+Words/gen/*
+Words/bin/*
+Words/build/*
+Words/.idea/*
+WordDomino/gen/*
+WordDomino/bin/*
+WordDomino/build/*
+WordDomino/.idea/*
+.idea/*
+.gradle/*
+appcompat_v7/*
+*.class
+TestProject/*
+*.index
+*.classpath

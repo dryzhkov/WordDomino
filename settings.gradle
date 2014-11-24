@@ -1,0 +1,2 @@
+include ':WordDomino'
+include ':appcompat_v7'
