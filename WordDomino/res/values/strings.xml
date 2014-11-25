@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Word Domino</string>
+    <string name="str_quick_start_head">Do you want to play a game?</string>
+    <string name="str_quick_start_askquestion"></string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="gamediff_easy">Easy</string>
+    <string name="gamediff_medium">Medium</string>
+    <string name="gamediff_hard">Hard</string>
+    <string name="game_difficulty_title">Difficulty</string>
+    <string name="first_player_title">First Player</string>
+    <string name="first_player_ai">AI</string>
+    <string name="first_player_player">Player</string>
+    <string name="btn_save_label">Save</string>
+    <string name="btn_stats_label">Stats</string>
+    <string name="title_activity_stats">StatsActivity</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
