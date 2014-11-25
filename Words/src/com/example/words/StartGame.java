@@ -204,6 +204,7 @@ public class StartGame extends Activity {
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
     protected void ProcessAnswerResponse(String toSpeak) {
+        Log.i("here", toSpeak);
         UtteranceProgressListener upl = new UtteranceProgressListener() {
 
             @Override
@@ -224,14 +225,14 @@ public class StartGame extends Activity {
                 // call it. But will not call Retort?
                 // Am I missing something obvious?
                 // SetUpListen()
+                Log.i("here", "right before retort");
                 Retort();
             }
         };
         util.tts.setOnUtteranceProgressListener(upl);
 
         HashMap<String, String> map = new HashMap<String, String>();
-        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,
-                "ProcessAnswerResponse");
+        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "ProcessAnswerResponse");
 
         util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, map);
         QTV.setText(toSpeak);
