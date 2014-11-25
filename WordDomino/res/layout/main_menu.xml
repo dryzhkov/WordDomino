@@ -18,25 +18,25 @@
             android:layout_alignParentTop="true"
             android:gravity="center"
             android:onClick="StartGame_Clicked"
-            android:text="Start Game"
+            android:text="New Game"
             style="?android:attr/borderlessButtonStyle" />
 
         <Button
-            android:id="@+id/btnLoadGame"
+            android:id="@+id/btnResumeGame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/btnStartGame"
             android:gravity="center"
             android:layout_centerHorizontal="true"
-            android:text="Load Game"
-            android:onClick="LoadGame_Clicked"
+            android:text="Resume"
+            android:onClick="ResumeGame_Clicked"
             style="?android:attr/borderlessButtonStyle" />
 
         <Button
             android:id="@+id/btnSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/btnLoadGame"
+            android:layout_below="@+id/btnResumeGame"
             android:gravity="center"
             android:layout_centerHorizontal="true"
             android:text="Settings"

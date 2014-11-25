@@ -35,7 +35,7 @@ public class StatsManager {
     public void SaveStats() {
         String data = new Gson().toJson(this.playerStats);
         try {
-            File target = EnsureFileExists();
+            File target = Util.EnsureFileExists(this.context, DIR_NAME, FILE_NAME, Context.MODE_PRIVATE);
             FileOutputStream outputStream = new FileOutputStream(target);
             outputStream.write(data.getBytes());
             outputStream.close();
@@ -119,7 +119,7 @@ public class StatsManager {
     private void LoadStats(){
         try{
             StringBuilder data = new StringBuilder();
-            File target = EnsureFileExists();
+            File target = Util.EnsureFileExists(this.context, DIR_NAME, FILE_NAME, Context.MODE_PRIVATE);
             InputStream inputStream = new FileInputStream(target);
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line = reader.readLine();
@@ -139,16 +139,6 @@ public class StatsManager {
             Log.e("StatsManager::SaveStats::Ex", ioex.toString());
             this.playerStats =  null;
         }
-    }
-
-    private File EnsureFileExists() throws IOException {
-        File targetDir = this.context.getDir(DIR_NAME, Context.MODE_PRIVATE);
-        File targetFile = new File(targetDir, FILE_NAME);
-        //targetFile.delete();
-        if(!targetFile.exists()) {
-            targetFile.createNewFile();
-        }
-        return targetFile;
     }
 
     protected class PlayerStats{
