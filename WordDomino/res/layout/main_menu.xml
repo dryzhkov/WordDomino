@@ -4,54 +4,54 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="${relativePackage}.${activityClass}" >
-	
-<RelativeLayout
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" >
-    
-	    <Button
-	        android:id="@+id/btnStartGame"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_centerHorizontal="true"
-	        android:layout_alignParentTop="true"
-	        android:gravity="center"
-	        android:onClick="StartGame_Clicked"
-	        android:text="Start Game" 
-	        style="?android:attr/borderlessButtonStyle" />
 
-	    <Button
-		    android:id="@+id/btnLoadGame"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_below="@+id/btnStartGame"
-		    android:gravity="center"
-		    android:layout_centerHorizontal="true"
-		    android:text="Load Game"
-		    android:onClick="LoadGame_Clicked"
-		    style="?android:attr/borderlessButtonStyle" />
-	    
-	    <Button
-		    android:id="@+id/btnSettings"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_below="@+id/btnLoadGame"
-		    android:gravity="center"
-		    android:layout_centerHorizontal="true"
-		    android:text="Settings"
-		    android:onClick="Settings_Clicked"
-		    style="?android:attr/borderlessButtonStyle" />
-	    
-	    <Button
-		    android:id="@+id/btnHighScores"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_below="@+id/btnSettings"
-		    android:gravity="center"
-		    android:layout_centerHorizontal="true"
-		    android:text="High Scores"
-		    android:onClick="HighScores_Clicked"
-		    style="?android:attr/borderlessButtonStyle" />
-	</RelativeLayout>
+        <Button
+            android:id="@+id/btnStartGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:onClick="StartGame_Clicked"
+            android:text="Start Game"
+            style="?android:attr/borderlessButtonStyle" />
+
+        <Button
+            android:id="@+id/btnLoadGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnStartGame"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:text="Load Game"
+            android:onClick="LoadGame_Clicked"
+            style="?android:attr/borderlessButtonStyle" />
+
+        <Button
+            android:id="@+id/btnSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnLoadGame"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:text="Settings"
+            android:onClick="Settings_Clicked"
+            style="?android:attr/borderlessButtonStyle" />
+
+        <Button
+            android:id="@+id/btnStats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnSettings"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:text="@string/btn_stats_label"
+            android:onClick="Stats_Clicked"
+            style="?android:attr/borderlessButtonStyle" />
+    </RelativeLayout>
 </RelativeLayout>
