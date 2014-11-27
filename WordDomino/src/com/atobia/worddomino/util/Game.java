@@ -6,10 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Game {
-    // Constants
-    protected static final double DEFAULT_TIME_TO_WAIT = 5000;
-    protected static final int DEFAULT_NUM_OF_STRIKES = 3;
-
     // Private Variables
     private int currentRunningScore;
     private double timeLimit;
@@ -26,21 +22,19 @@ public class Game {
      */
     public Game(Context c) {
         // Initialize
-        this.timeLimit = DEFAULT_TIME_TO_WAIT;
+        this.timeLimit = Configuration.DEFAULT_TIME_TO_WAIT;
         this.currentRunningScore = 0;
         this.longestStreak = 0;
         this.currentStreak = 0;
-        this.numOfStrikesLeft = DEFAULT_NUM_OF_STRIKES;
+        this.numOfStrikesLeft = Configuration.DEFAULT_NUM_OF_STRIKES;
         this.failedWords = new HashSet<String>();
         this.successWords = new HashSet<String>();
-
         this.context = c;
     }
 
     /**
      * Returns total number of points
-     * 
-     * @param int points
+     *
      * @return integer
      */
     public int updateScore(double milliSecondsToAnswer) {

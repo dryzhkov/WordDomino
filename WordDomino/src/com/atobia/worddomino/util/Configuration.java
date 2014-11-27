@@ -4,11 +4,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class Configuration {
+    // Constants
     public static final String PREFERENCES_KEY = "WORDS_APP_PREF_FILE";
     public static final String GAME_DIFF_KEY = "GAME_DIFFICULTY";
     public static final String FIRST_PLAYER_KEY = "FIRST_PLAYER";
-    public static int GameDifficulty;
-    public static int FirstPlayer;
+    public static final double DEFAULT_TIME_TO_WAIT = 5000;
+    public static final int DEFAULT_NUM_OF_STRIKES = 3;
+    public static final String RESUME_GAME_FILE_NAME = "resume_game.xml";
+    public static final String RESUME_GAME_DIR_NAME = "data/save";
+
+    public static int GameDifficulty = 0;
+    public static int FirstPlayer = 0;
+    public static boolean SavedGameExists = false;
 
     public static int[] LetterRanking = new int[]
     {        DifficultyLevel.EASY, /* a */

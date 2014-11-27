@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
+import com.atobia.worddomino.util.Configuration;
 
 public class MainMenuActivity extends Activity {
 
@@ -12,6 +14,10 @@ public class MainMenuActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
+
+        //hide/show resume button
+        Button btnResume = (Button)findViewById(R.id.btnResumeGame);
+        btnResume.setEnabled(Configuration.SavedGameExists);
     }
 
     public void StartGame_Clicked(View view) {
