@@ -96,6 +96,7 @@ public class StatsActivity extends Activity {
                                 bestLetter.GetCharacter(),
                                 bestLetter.GetSuccessRatio() * 100));
             }
+            //TODO: if null put place holder text or hide the whole thing
         }
     }
 

@@ -18,7 +18,7 @@
             android:layout_alignParentTop="true"
             android:gravity="center"
             android:onClick="StartGame_Clicked"
-            android:text="New Game"
+            android:text="@string/btn_newgame_label"
             style="?android:attr/borderlessButtonStyle" />
 
         <Button
@@ -28,7 +28,7 @@
             android:layout_below="@+id/btnStartGame"
             android:gravity="center"
             android:layout_centerHorizontal="true"
-            android:text="Resume"
+            android:text="@string/btn_resume_label"
             android:onClick="ResumeGame_Clicked"
             style="?android:attr/borderlessButtonStyle" />
 
@@ -39,7 +39,7 @@
             android:layout_below="@+id/btnResumeGame"
             android:gravity="center"
             android:layout_centerHorizontal="true"
-            android:text="Settings"
+            android:text="@string/btn_settings_label"
             android:onClick="Settings_Clicked"
             style="?android:attr/borderlessButtonStyle" />
 

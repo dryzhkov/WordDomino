@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Total Games Played"
+        android:text="@string/total_games_played_title"
         />
     <TableLayout
         android:id="@+id/tblTotalGames"
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Highest Score"
+        android:text="@string/highest_score_title"
         />
 
     <TableLayout
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Longest Streak"
+        android:text="@string/longest_streak_title"
         />
     <TableLayout
         android:id="@+id/tblLongestStreaks"
@@ -52,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Best Letter"
+        android:text="@string/best_letter_title"
         />
     <TextView
         android:layout_width="wrap_content"

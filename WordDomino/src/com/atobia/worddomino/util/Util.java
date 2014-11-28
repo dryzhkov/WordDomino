@@ -111,6 +111,9 @@ public class Util {
     }
 
     public static Game LoadGame(Context c){
+        if(!Configuration.SavedGameExists){
+            return null;
+        }
         Game loadedGame = null;
         StringBuilder data = new StringBuilder();
         try{
