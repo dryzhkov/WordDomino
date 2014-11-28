@@ -11,6 +11,7 @@ import java.util.Locale;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.atobia.worddomino.R;
 import com.google.gson.Gson;
@@ -59,6 +60,11 @@ public class Util {
             }
         });
     }
+
+    public void SpeakAndOutPut(TextView QTV, String toSpeak) {
+
+    }
+
     public static int AtoI(char c){
         if(c == ' '){
             return WordDictionary.arrayUpperBound;

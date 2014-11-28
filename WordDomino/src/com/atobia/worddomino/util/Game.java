@@ -14,8 +14,11 @@ public class Game {
     private int numOfStrikesLeft;
     private Set<String> failedWords;
     private Set<String> successWords;
-    private int diffLevel;
     private Context context;
+
+    // Public Variables
+    public WordDictionary wd;
+    public Util util;
 
     /**
      * @param c
@@ -30,6 +33,9 @@ public class Game {
         this.failedWords = new HashSet<String>();
         this.successWords = new HashSet<String>();
         this.context = c;
+
+        this.util = new Util();
+        wd = util.LoadWordsFromFile(c);
     }
 
     /**

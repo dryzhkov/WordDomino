@@ -6,7 +6,6 @@ import java.util.Random;
 
 import com.atobia.worddomino.util.Configuration;
 import com.atobia.worddomino.util.Game;
-import com.atobia.worddomino.util.Util;
 import com.atobia.worddomino.util.WordDictionary;
 
 import android.annotation.TargetApi;
@@ -26,14 +25,8 @@ import android.content.Intent;
 
 public class StartGame extends Activity {
     protected static final int RESULT_SPEECH = 1;
-    protected static final int START_TIME_TO_WAIT = 5000;
-    protected static final int TIME_INCREMENT = 1000;
 
-    protected static final int RETORT_WAIT_TIME = 2000;
-
-    private WordDictionary wd;
     private TextView QTV;
-    private Util util;
     private long timeStartedListening;
     private Game game;
 
@@ -44,25 +37,23 @@ public class StartGame extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_game);
-        util = new Util();
 
         // Set up the text to speech by passing it the context
-        util.SetUpTTS(this);
-        wd = util.LoadWordsFromFile(this);
+        this.game.util.SetUpTTS(this);
         QTV = (TextView) findViewById(R.id.quick_start_askquestion);
 
         Configuration.LoadSettings(this);
-        game = new Game(this);
+        this.game = new Game(this);
     }
 
     protected void onStart() {
         super.onStart();
-        new CountDownTimer(START_TIME_TO_WAIT, TIME_INCREMENT) {
+        new CountDownTimer((int)Configuration.DEFAULT_TIME_TO_WAIT, Configuration.TIME_INCREMENT) {
             public void onTick(long millisUntilFinished) {
-                String strNumOfSeconds = Long.toString(millisUntilFinished / TIME_INCREMENT);
+                String strNumOfSeconds = Long.toString(millisUntilFinished / Configuration.TIME_INCREMENT);
                 String toSpeak = strNumOfSeconds;
-                QTV.setText("Game starts in: " + millisUntilFinished / TIME_INCREMENT);
-                util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                QTV.setText("Game starts in: " + millisUntilFinished / Configuration.TIME_INCREMENT);
+                game.util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
             }
 
             public void onFinish() {
@@ -95,12 +86,12 @@ public class StartGame extends Activity {
                 SetUpListen();
             }
         };
-        util.tts.setOnUtteranceProgressListener(upl);
+        this.game.util.tts.setOnUtteranceProgressListener(upl);
 
         HashMap<String, String> map = new HashMap<String, String>();
         map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "messageID");
 
-        util.tts.speak(strInstruction, TextToSpeech.QUEUE_FLUSH, map);
+        this.game.util.tts.speak(strInstruction, TextToSpeech.QUEUE_FLUSH, map);
         QTV.setText(strInstruction);
     }
 
@@ -111,14 +102,14 @@ public class StartGame extends Activity {
         try {
             startActivityForResult(myIntent, RESULT_SPEECH);
 
-            new CountDownTimer(START_TIME_TO_WAIT, TIME_INCREMENT) {
+            new CountDownTimer((int)Configuration.DEFAULT_TIME_TO_WAIT, Configuration.TIME_INCREMENT) {
                 public void onTick(long millisUntilFinished) {
                     String strNumOfSeconds = Long.toString(millisUntilFinished
-                            / TIME_INCREMENT);
+                            / Configuration.TIME_INCREMENT);
                     String toSpeak = strNumOfSeconds;
                     QTV.setText("Game starts in: " + millisUntilFinished
-                            / TIME_INCREMENT);
-                    util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                            / Configuration.TIME_INCREMENT);
+                    game.util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
                 }
 
                 public void onFinish() {
@@ -165,11 +156,11 @@ public class StartGame extends Activity {
         handler.postDelayed(new Runnable() {
             public void run() {
             }
-        }, RETORT_WAIT_TIME);
+        }, Configuration.RETORT_WAIT_TIME);
         // They gave an answer, let's make sure that it was a valid one
         String toSpeak = "";
         try {
-            if (wd.MarkAsUsed(answer)) {
+            if (game.wd.MarkAsUsed(answer)) {
                 toSpeak = answer + " is correct!";
             } else {
                 // Update the amount of strikes
@@ -179,10 +170,8 @@ public class StartGame extends Activity {
                 if (numOfStrikesLeft < 0) {
                     // No more strikes, finish the game. You're OUT!
                     game.GameOver();
-    
                     toSpeak = "3 strikes, game is over.";
-                    QTV.setText(toSpeak);
-                    util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                    this.game.util.SpeakAndOutPut(QTV, toSpeak);
     
                     // Todo Go back to main menu
                     return;
@@ -195,17 +184,17 @@ public class StartGame extends Activity {
                     }
                 }
             }
+            ProcessAnswerResponse(toSpeak);
         } catch (Exception ex) {
             // Uh-oh
-            QTV.setText("Sorry, an error has occurred.");
+            toSpeak = "Sorry, an error has occurred.";
+            this.game.util.SpeakAndOutPut(QTV, toSpeak);
             Log.e("Exception", ex.getMessage());
         }
-        ProcessAnswerResponse(toSpeak);
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
     protected void ProcessAnswerResponse(String toSpeak) {
-        Log.i("here", toSpeak);
         UtteranceProgressListener upl = new UtteranceProgressListener() {
 
             @Override
@@ -217,7 +206,6 @@ public class StartGame extends Activity {
             @Override
             public void onError(String utteranceId) {
                 // TODO Auto-generated method stub
-                QTV.setText("Error");
             }
 
             @Override
@@ -230,12 +218,12 @@ public class StartGame extends Activity {
                 Retort();
             }
         };
-        util.tts.setOnUtteranceProgressListener(upl);
+        this.game.util.tts.setOnUtteranceProgressListener(upl);
 
         HashMap<String, String> map = new HashMap<String, String>();
         map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "ProcessAnswerResponse");
 
-        util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, map);
+        this.game.util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, map);
         QTV.setText(toSpeak);
     }
 
@@ -243,17 +231,15 @@ public class StartGame extends Activity {
         Toast.makeText(getApplicationContext(), "In retort", Toast.LENGTH_LONG).show();
         char c = this.lastAnswer.charAt(0);
 
-        String retort = wd.FindAnswer(c);
+        String retort = game.wd.FindAnswer(c);
         // Find answer can return empty
         if ("".equals(retort)) {
             String toSpeak = "Well, this is embarrassing. I'm stumped, you win.";
-            QTV.setText(toSpeak);
-            util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+            this.game.util.SpeakAndOutPut(QTV, toSpeak);
         } else {
             String toSpeak = "My turn. Something that starts with the letter " + Character.toUpperCase(c);
             toSpeak += " How about...." + retort;
-            QTV.setText(toSpeak);
-            util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+            this.game.util.SpeakAndOutPut(QTV, toSpeak);
         }
     }
 }
