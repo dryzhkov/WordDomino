@@ -18,7 +18,6 @@ public class Game {
 
     // Public Variables
     public WordDictionary wd;
-    public Util util;
 
     /**
      * @param c
@@ -33,9 +32,6 @@ public class Game {
         this.failedWords = new HashSet<String>();
         this.successWords = new HashSet<String>();
         this.context = c;
-
-        this.util = new Util();
-        wd = util.LoadWordsFromFile(c);
     }
 
     /**
