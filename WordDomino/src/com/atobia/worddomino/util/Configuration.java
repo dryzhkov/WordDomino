@@ -8,6 +8,7 @@ public class Configuration {
     public static final String PREFERENCES_KEY = "WORDS_APP_PREF_FILE";
     public static final String GAME_DIFF_KEY = "GAME_DIFFICULTY";
     public static final String FIRST_PLAYER_KEY = "FIRST_PLAYER";
+    public static final String SHOW_SAFETY_SCREEN_KEY = "SHOW_SAFETY_SCREEN";
     public static final double DEFAULT_TIME_TO_WAIT = 5000;
     public static final int TIME_INCREMENT = 1000;
     public static final int RETORT_WAIT_TIME = 2000;
@@ -17,6 +18,7 @@ public class Configuration {
 
     public static int GameDifficulty = 0;
     public static int FirstPlayer = 0;
+    public static boolean ShowSafetyScreen = true;
     public static boolean SavedGameExists = false;
 
     public static int[] LetterRanking = new int[]
@@ -62,6 +64,7 @@ public class Configuration {
         SharedPreferences settings = context.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
         GameDifficulty = settings.getInt(GAME_DIFF_KEY, DifficultyLevel.EASY);
         FirstPlayer = settings.getInt(FIRST_PLAYER_KEY, PlayerType.AI);
+        ShowSafetyScreen = settings.getBoolean(SHOW_SAFETY_SCREEN_KEY, true); //show safety screen by default
     }
 
     public static void SaveSettings(Context context){
@@ -69,6 +72,7 @@ public class Configuration {
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt(GAME_DIFF_KEY, GameDifficulty);
         editor.putInt(FIRST_PLAYER_KEY, FirstPlayer);
+        editor.putBoolean(SHOW_SAFETY_SCREEN_KEY, ShowSafetyScreen);
         editor.commit();
     }
 }

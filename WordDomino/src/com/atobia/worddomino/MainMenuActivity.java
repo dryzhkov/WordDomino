@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import com.atobia.worddomino.util.Configuration;
+import com.atobia.worddomino.util.SafetyNoticeDialog;
 
 public class MainMenuActivity extends Activity {
 
@@ -18,12 +19,33 @@ public class MainMenuActivity extends Activity {
         //hide/show resume button
         Button btnResume = (Button)findViewById(R.id.btnResumeGame);
         btnResume.setEnabled(Configuration.SavedGameExists);
+
+        Configuration.LoadSettings(this);
+        if(Configuration.ShowSafetyScreen){
+            SafetyNoticeDialog snd = new SafetyNoticeDialog();
+            snd.show(getFragmentManager(), "safety_notice");
+        }
+    }
+
+    @Override
+    public void onBackPressed(){
+        MainMenuActivity.this.finish();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+    }
+
+    @Override
+    public void onStop(){
+        Configuration.SaveSettings(this);
+        super.onStop();
     }
 
     public void StartGame_Clicked(View view) {
         Intent intent = new Intent(this, StartGame.class);
         startActivity(intent);
-
     }
 
     public void NewGame_Clicked(View view) {
@@ -35,7 +57,6 @@ public class MainMenuActivity extends Activity {
     public void LoadGame_Clicked(View view) {
         Toast.makeText(getApplicationContext(), "Load Game Clicked!",
                 Toast.LENGTH_LONG).show();
-
     }
 
     public void Settings_Clicked(View view) {
