@@ -43,15 +43,9 @@ public class MainMenuActivity extends Activity {
         super.onStop();
     }
 
-    public void StartGame_Clicked(View view) {
+    public void NewGame_Clicked(View view) {
         Intent intent = new Intent(this, StartGame.class);
         startActivity(intent);
-    }
-
-    public void NewGame_Clicked(View view) {
-        Toast.makeText(getApplicationContext(), "New Game Clicked!",
-                Toast.LENGTH_LONG).show();
-
     }
 
     public void LoadGame_Clicked(View view) {
@@ -60,8 +54,10 @@ public class MainMenuActivity extends Activity {
     }
 
     public void Settings_Clicked(View view) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, SettingsActivity.class);
+        //startActivity(intent);
+        GameView gv = new GameView(this);
+        setContentView(gv);
     }
 
     public void Stats_Clicked(View view) {
