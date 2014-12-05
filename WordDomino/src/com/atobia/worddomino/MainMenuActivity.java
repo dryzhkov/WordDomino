@@ -22,8 +22,8 @@ public class MainMenuActivity extends Activity {
 
     public void StartGame_Clicked(View view) {
         Intent intent = new Intent(this, StartGame.class);
+        intent.putExtra("com.atobia.worddomino.isNewGame", true);
         startActivity(intent);
-
     }
 
     public void NewGame_Clicked(View view) {
@@ -33,9 +33,9 @@ public class MainMenuActivity extends Activity {
     }
 
     public void LoadGame_Clicked(View view) {
-        Toast.makeText(getApplicationContext(), "Load Game Clicked!",
-                Toast.LENGTH_LONG).show();
-
+        Intent intent = new Intent(this, StartGame.class);
+        intent.putExtra("com.atobia.worddomino.isNewGame", false);
+        startActivity(intent);
     }
 
     public void Settings_Clicked(View view) {

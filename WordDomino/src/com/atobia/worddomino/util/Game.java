@@ -18,6 +18,9 @@ public class Game {
 
     // Public Variables
     public WordDictionary wd;
+    public boolean isGameOver = false;
+
+    public EnumGameState CurrentState;
 
     /**
      * @param c
@@ -108,6 +111,8 @@ public class Game {
             }
 
             sm.SaveStats();
+
+            this.isGameOver = true;
         }
     }
 

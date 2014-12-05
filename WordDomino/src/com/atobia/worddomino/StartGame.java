@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import com.atobia.worddomino.util.Configuration;
+import com.atobia.worddomino.util.EnumGameState;
 import com.atobia.worddomino.util.Game;
 import com.atobia.worddomino.util.Util;
 import com.atobia.worddomino.util.WordDictionary;
@@ -35,6 +36,7 @@ public class StartGame extends Activity {
     // UtteranceProgressListener can't take params so we resort to this bs
     private String lastAnswer;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,28 +49,65 @@ public class StartGame extends Activity {
         QTV = (TextView) findViewById(R.id.quick_start_askquestion);
 
         Configuration.LoadSettings(this);
-        this.game = new Game(this);
-        this.game.wd = this.util.LoadWordsFromFile(this);
     }
 
     protected void onStart() {
         super.onStart();
-        new CountDownTimer((int)Configuration.DEFAULT_TIME_TO_WAIT, Configuration.TIME_INCREMENT) {
-            public void onTick(long millisUntilFinished) {
-                String strNumOfSeconds = Long.toString(millisUntilFinished / Configuration.TIME_INCREMENT);
-                String toSpeak = strNumOfSeconds;
-                QTV.setText("Game starts in: " + millisUntilFinished / Configuration.TIME_INCREMENT);
-                util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-            }
 
-            public void onFinish() {
-                StartCityLetterGame();
+        Boolean isNewGame = getIntent().getExtras().getBoolean("com.atobia.worddomino.isNewGame", true);
+        if (!isNewGame) {
+            this.game = util.LoadGame(this);
+        }
+
+        // Loadgame can fail and return null. Start a new game in that case.
+        if (isNewGame || this.game == null) {
+            this.game = new Game(this);
+            this.game.wd = this.util.LoadWordsFromFile(this);
+            this.game.CurrentState = EnumGameState.ASKFORWORD;
+
+            new CountDownTimer((int) Configuration.DEFAULT_TIME_TO_WAIT, Configuration.TIME_INCREMENT) {
+                public void onTick(long millisUntilFinished) {
+                    String strNumOfSeconds = Long.toString(millisUntilFinished / Configuration.TIME_INCREMENT);
+                    String toSpeak = strNumOfSeconds;
+                    QTV.setText("Game starts in: " + millisUntilFinished / Configuration.TIME_INCREMENT);
+                    util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                }
+
+                public void onFinish() {
+                    GameManager();
+                }
+            }.start();
+        } else {
+            // The load game doesn't need the countdown.
+            GameManager();
+        }
+    }
+
+    protected void GameManager() {
+        // Keep on going until the game is over
+        while (!this.game.isGameOver) {
+            switch (this.game.CurrentState) {
+                case ASKFORWORD:
+                    AskForWord();
+                    break;
+
+                case LISTENFORWORD:
+                    ListenForWord();
+                    break;
+
+                case PROCESSANSWER:
+                    ProcessAnswer();
+                    break;
+
+                case RETORT:
+                    Retort();
+                    break;
             }
-        }.start();
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-    protected void StartCityLetterGame() {
+    protected void AskForWord() {
         Random r = new Random();
         char c = (char) (r.nextInt(WordDictionary.arrayUpperBound) + 'a');
         String strInstruction = "Name a city that starts with the letter: " + Character.toUpperCase(c);
@@ -88,7 +127,8 @@ public class StartGame extends Activity {
 
             @Override
             public void onDone(String utteranceId) {
-                SetUpListen();
+                game.CurrentState = EnumGameState.LISTENFORWORD;
+                //ListenForWord();
             }
         };
         this.util.tts.setOnUtteranceProgressListener(upl);
@@ -100,7 +140,7 @@ public class StartGame extends Activity {
         QTV.setText(strInstruction);
     }
 
-    private void SetUpListen() {
+    private void ListenForWord() {
         Intent myIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         myIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
 
@@ -117,9 +157,7 @@ public class StartGame extends Activity {
                     util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
                 }
 
-                public void onFinish() {
-                    StartCityLetterGame();
-                }
+                public void onFinish() {}
             }.start();
 
         } catch (ActivityNotFoundException aex) {
@@ -146,16 +184,18 @@ public class StartGame extends Activity {
                     double totalTime = (timeStoppedListening - timeStartedListening) / 1000000;
                     QTV.setText(text.get(0) + " took " + Double.toString(totalTime)
                             + " milliseconds");
-    
-                    ProcessAnswer(text.get(0));
+
+                    this.lastAnswer = text.get(0);
+                    this.game.CurrentState = EnumGameState.PROCESSANSWER;
+                    //ProcessAnswer();
                 }
                 break;
             }
         }
     }
 
-    protected void ProcessAnswer(String answer) {
-        this.lastAnswer = answer;
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+    protected void ProcessAnswer() {
         // Wait some time before she responds
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -163,10 +203,10 @@ public class StartGame extends Activity {
             }
         }, Configuration.RETORT_WAIT_TIME);
         // They gave an answer, let's make sure that it was a valid one
-        String toSpeak = "";
+        String toSpeak;
         try {
-            if (game.wd.MarkAsUsed(answer)) {
-                toSpeak = answer + " is correct!";
+            if (game.wd.MarkAsUsed(this.lastAnswer)) {
+                toSpeak = this.lastAnswer + " is correct!";
             } else {
                 // Update the amount of strikes
                 int numOfStrikesLeft = game.FailedAnswer();
@@ -189,47 +229,38 @@ public class StartGame extends Activity {
                     }
                 }
             }
-            ProcessAnswerResponse(toSpeak);
+
+            UtteranceProgressListener upl = new UtteranceProgressListener() {
+
+                @Override
+                public void onStart(String utteranceId) {
+                    // Need to log the time that we started listening
+                    timeStartedListening = System.nanoTime();
+                }
+
+                @Override
+                public void onError(String utteranceId) {}
+
+                @Override
+                public void onDone(String utteranceId) {
+                    game.CurrentState = EnumGameState.RETORT;
+                    //Retort();
+                }
+            };
+            this.util.tts.setOnUtteranceProgressListener(upl);
+
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "ProcessAnswerResponse");
+
+            this.util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, map);
+            QTV.setText(toSpeak);
+
         } catch (Exception ex) {
             // Uh-oh
             toSpeak = "Sorry, an error has occurred.";
             this.util.SpeakAndOutPut(QTV, toSpeak);
             Log.e("Exception", ex.getMessage());
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-    protected void ProcessAnswerResponse(String toSpeak) {
-        UtteranceProgressListener upl = new UtteranceProgressListener() {
-
-            @Override
-            public void onStart(String utteranceId) {
-                // Need to log the time that we started listening
-                timeStartedListening = System.nanoTime();
-            }
-
-            @Override
-            public void onError(String utteranceId) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onDone(String utteranceId) {
-                // Interesting bug, if I uncomment the setUpListen() she will
-                // call it. But will not call Retort?
-                // Am I missing something obvious?
-                // SetUpListen()
-                Log.i("here", "right before retort");
-                Retort();
-            }
-        };
-        this.util.tts.setOnUtteranceProgressListener(upl);
-
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "ProcessAnswerResponse");
-
-        this.util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, map);
-        QTV.setText(toSpeak);
     }
 
     private void Retort() {
@@ -241,10 +272,12 @@ public class StartGame extends Activity {
         if ("".equals(retort)) {
             String toSpeak = "Well, this is embarrassing. I'm stumped, you win.";
             this.util.SpeakAndOutPut(QTV, toSpeak);
+            this.game.GameOver();
         } else {
             String toSpeak = "My turn. Something that starts with the letter " + Character.toUpperCase(c);
             toSpeak += " How about...." + retort;
             this.util.SpeakAndOutPut(QTV, toSpeak);
+            this.game.CurrentState = EnumGameState.ASKFORWORD;
         }
     }
 }
