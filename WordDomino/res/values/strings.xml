@@ -23,5 +23,6 @@
     <string name="highest_score_title">Highest Score</string>
     <string name="longest_streak_title">Longest Streak</string>
     <string name="best_letter_title">Best Letter</string>
+    <string name="title_activity_game_view">GameView</string>
 
 </resources>

@@ -17,7 +17,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
             android:gravity="center"
-            android:onClick="StartGame_Clicked"
+            android:onClick="NewGame_Clicked"
             android:text="@string/btn_newgame_label"
             style="?android:attr/borderlessButtonStyle" />
 
