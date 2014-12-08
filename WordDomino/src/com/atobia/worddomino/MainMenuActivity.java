@@ -54,10 +54,10 @@ public class MainMenuActivity extends Activity {
     }
 
     public void Settings_Clicked(View view) {
-        //Intent intent = new Intent(this, SettingsActivity.class);
-        //startActivity(intent);
-        GameView gv = new GameView(this);
-        setContentView(gv);
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+        //GameView gv = new GameView(this);
+        //setContentView(gv);
     }
 
     public void Stats_Clicked(View view) {
