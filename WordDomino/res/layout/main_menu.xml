@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/app_bg"
     tools:context="${relativePackage}.${activityClass}" >
 
     <RelativeLayout
@@ -14,44 +15,40 @@
             android:id="@+id/btnStartGame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:gravity="center"
             android:onClick="NewGame_Clicked"
             android:text="@string/btn_newgame_label"
-            style="?android:attr/borderlessButtonStyle" />
+            style="@style/btnMenu"
+            />
 
         <Button
             android:id="@+id/btnResumeGame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/btnStartGame"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
             android:text="@string/btn_resume_label"
             android:onClick="ResumeGame_Clicked"
-            style="?android:attr/borderlessButtonStyle" />
+            style="@style/btnMenu"
+            />
 
         <Button
             android:id="@+id/btnSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/btnResumeGame"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
             android:text="@string/btn_settings_label"
             android:onClick="Settings_Clicked"
-            style="?android:attr/borderlessButtonStyle" />
+            style="@style/btnMenu"
+            />
 
         <Button
             android:id="@+id/btnStats"
+            android:textSize="14pt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/btnSettings"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
             android:text="@string/btn_stats_label"
             android:onClick="Stats_Clicked"
-            style="?android:attr/borderlessButtonStyle" />
+            style="@style/btnMenu"
+            />
     </RelativeLayout>
 </RelativeLayout>

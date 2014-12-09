@@ -17,4 +17,10 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="btnMenu">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:background">@drawable/btn_menu_selector</item>
+        <item name="android:textSize">14pt</item>
+    </style>
 </resources>

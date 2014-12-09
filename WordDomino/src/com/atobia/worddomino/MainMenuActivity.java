@@ -19,7 +19,6 @@ public class MainMenuActivity extends Activity {
         //hide/show resume button
         Button btnResume = (Button)findViewById(R.id.btnResumeGame);
         btnResume.setEnabled(Configuration.SavedGameExists);
-
         Configuration.LoadSettings(this);
         if(Configuration.ShowSafetyScreen){
             SafetyNoticeDialog snd = new SafetyNoticeDialog();

@@ -4,6 +4,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+
 import com.atobia.worddomino.util.Configuration;
 import com.atobia.worddomino.ui.TabPagerAdapter;
 
@@ -37,5 +39,8 @@ public class SettingsActivity extends FragmentActivity {
     public void onStop(){
         super.onStop();
         Configuration.SaveSettings(this);
+        Toast.makeText(getApplicationContext(),
+                "Saving Settings",
+                Toast.LENGTH_SHORT).show();
     }
 }
