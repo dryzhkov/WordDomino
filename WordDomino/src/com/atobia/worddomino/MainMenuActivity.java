@@ -19,7 +19,6 @@ public class MainMenuActivity extends Activity {
         //hide/show resume button
         Button btnResume = (Button)findViewById(R.id.btnResumeGame);
         btnResume.setEnabled(Configuration.SavedGameExists);
-
         Configuration.LoadSettings(this);
         if(Configuration.ShowSafetyScreen){
             SafetyNoticeDialog snd = new SafetyNoticeDialog();
@@ -54,10 +53,10 @@ public class MainMenuActivity extends Activity {
     }
 
     public void Settings_Clicked(View view) {
-        //Intent intent = new Intent(this, SettingsActivity.class);
-        //startActivity(intent);
-        GameView gv = new GameView(this);
-        setContentView(gv);
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+        //GameView gv = new GameView(this);
+        //setContentView(gv);
     }
 
     public void Stats_Clicked(View view) {

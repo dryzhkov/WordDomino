@@ -1,74 +1,18 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+<android.support.v4.view.ViewPager
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pager"
+    android:background="@drawable/app_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <android.support.v4.view.PagerTitleStrip
+        android:id="@+id/pager_title_strip"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/game_difficulty_title"
-        android:id="@+id/textView" />
+        android:layout_gravity="bottom"
+        android:background="#33b5e5"
+        android:textColor="#fff"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp" />
 
-    <RadioGroup
-        android:id="@+id/radioGroupGameDiff"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <RadioButton
-            android:id="@+id/rb_gamediff_easy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/gamediff_easy"
-            android:checked="true" />
-
-        <RadioButton
-            android:id="@+id/rb_gamediff_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/gamediff_medium" />
-        
-        <RadioButton
-            android:id="@+id/rb_gamediff_hard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/gamediff_hard" />
-
-    </RadioGroup>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/first_player_title"
-        android:id="@+id/textView2" />
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/radioGroupFirstPlayer">
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/first_player_ai"
-            android:id="@+id/rb_firstplayer_ai"
-            android:checked="true" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/first_player_player"
-            android:id="@+id/rb_firstplayer_player" />
-
-    </RadioGroup>
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="155dp"
-        android:layout_height="wrap_content"
-        android:onClick="btnSave_Clicked"
-        android:text="@string/btn_save_label"
-        android:longClickable="false" />
-
-</LinearLayout>
+</android.support.v4.view.ViewPager>
