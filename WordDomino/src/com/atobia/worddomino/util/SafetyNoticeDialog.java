@@ -6,8 +6,6 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import com.atobia.worddomino.MainMenuActivity;
-
 /**
  * Created by dima on 11/30/2014.
  */

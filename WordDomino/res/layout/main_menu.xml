@@ -50,5 +50,16 @@
             android:onClick="Stats_Clicked"
             style="@style/btnMenu"
             />
+
+        <Button
+            android:id="@+id/btnFeedBack"
+            android:textSize="14pt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnStats"
+            android:text="@string/btn_feedback_label"
+            android:onClick="SendFeedBack_Clicked"
+            style="@style/btnMenu"
+            />
     </RelativeLayout>
 </RelativeLayout>

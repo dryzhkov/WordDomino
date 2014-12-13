@@ -15,6 +15,7 @@
     <string name="btn_save_label">Save</string>
     <string name="btn_stats_label">Stats</string>
     <string name="btn_settings_label">Settings</string>
+    <string name="btn_feedback_label">Send Feedback</string>
     <string name="btn_resume_label">Resume</string>
     <string name="btn_newgame_label">New Game</string>
     <string name="title_activity_stats">StatsActivity</string>
