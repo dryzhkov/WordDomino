@@ -9,6 +9,8 @@ public abstract class Page {
     //members
     private int resourceId;
     private String pageTitle;
+    protected Runnable onStartFunc;
+    protected Runnable onFinishFunc;
 
     public Page(int r, String t){
         this.resourceId = r;
@@ -18,7 +20,14 @@ public abstract class Page {
     public int getResourceId(){
         return this.resourceId;
     }
+
     public String getPageTitle(){ return this.pageTitle; }
+    public void setOnStartFunc(Runnable func){
+        this.onStartFunc = func;
+    }
+    public void setOnFinishFunc(Runnable func){
+        this.onFinishFunc = func;
+    }
 
     abstract void onStart();
     abstract void onFinish();
