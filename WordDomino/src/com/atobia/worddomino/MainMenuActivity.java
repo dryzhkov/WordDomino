@@ -28,7 +28,7 @@ public class MainMenuActivity extends Activity {
     }
 
     public void StartGame_Clicked(View view) {
-        Intent intent = new Intent(this, StartGame.class);
+        Intent intent = new Intent(this, StartGameActivity.class);
         intent.putExtra("com.atobia.worddomino.isNewGame", true);
         startActivity(intent);
     }
@@ -44,13 +44,14 @@ public class MainMenuActivity extends Activity {
 
     @Override
     public void onStop(){
+        super.onResume();
         Configuration.SaveSettings(this);
         super.onStop();
     }
 
     public void NewGame_Clicked(View view) {
-        Intent intent = new Intent(this, StartGame.class);
-        startActivity(intent);
+        super.onResume();
+        startActivity(new Intent(this, StartGameActivity.class));
     }
 
     public void LoadGame_Clicked(View view) {

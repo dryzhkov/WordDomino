@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Locale;
+
+import android.app.Activity;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -17,14 +19,14 @@ import com.atobia.worddomino.R;
 import com.google.gson.Gson;
 
 public class Util {
-    private Context context;
+    private Activity activity;
     private WordDictionary myDictionary;
     public TextToSpeech tts;
 
-    public WordDictionary LoadWordsFromFile(Context c){
-        this.context = c;
+    public WordDictionary LoadWordsFromFile(Activity a){
+        this.activity = a;
         myDictionary = new WordDictionary();
-        InputStream ins = this.context.getResources().openRawResource(R.raw.cities);
+        InputStream ins = this.activity.getResources().openRawResource(R.raw.cities);
         BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
 
         String line;
@@ -44,25 +46,21 @@ public class Util {
         return myDictionary;
     }
 
-    public void SetUpTTS(Context c){
-        this.context = c;
-        tts = new TextToSpeech(c.getApplicationContext(), new TextToSpeech.OnInitListener() {
+    public void SetUpTTS(Activity a){
+        this.activity = a;
+        tts = new TextToSpeech(this.activity.getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR){
                     tts.setLanguage(Locale.US);
                 }else{
-                    Toast t = Toast.makeText(Util.this.context.getApplicationContext(),
+                    Toast t = Toast.makeText(Util.this.activity.getApplicationContext(),
                             "Text To Speech is not supported",
                             Toast.LENGTH_SHORT);
                     t.show();
                 }
             }
         });
-    }
-
-    public void SpeakAndOutPut(TextView QTV, String toSpeak) {
-
     }
 
     public static int AtoI(char c){

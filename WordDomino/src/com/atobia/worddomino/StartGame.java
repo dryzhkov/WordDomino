@@ -1,113 +1,168 @@
 package com.atobia.worddomino;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-
-import com.atobia.worddomino.util.Configuration;
-import com.atobia.worddomino.util.EnumGameState;
-import com.atobia.worddomino.util.Game;
-import com.atobia.worddomino.util.Util;
-import com.atobia.worddomino.util.WordDictionary;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 
-public class StartGame extends Activity {
+import com.atobia.worddomino.util.Configuration;
+import com.atobia.worddomino.util.EnumGameState;
+import com.atobia.worddomino.util.Game;
+import com.atobia.worddomino.util.StartGameLoop;
+import com.atobia.worddomino.util.Util;
+import com.atobia.worddomino.util.WordDictionary;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+
+public class StartGame extends SurfaceView {
     protected static final int RESULT_SPEECH = 1;
 
+    private StartGameLoop startGameLoop;
+    private Handler handler;
+    private Context context;
+    private Activity activity;
+    public long startTime;
+
     private TextView QTV;
-    private long timeStartedListening;
-    private Game game;
+    public Game game;
     private Util util;
 
+    public boolean isLoadGame = false;
+
+    public long timeStartedListening;
+
     // UtteranceProgressListener can't take params so we resort to this bs
-    private String lastAnswer;
+    public String lastAnswer;
 
+    public StartGame(Activity activity) {
+        super(activity);
+        this.activity = activity;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.start_game);
+        this.QTV = (TextView) this.activity.findViewById(R.id.quick_start_askquestion);
+
+        handler = new Handler();
+        startGameLoop = new StartGameLoop(this);
+        SurfaceHolder holder = getHolder();
+        holder.addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                while (true) {
+                    try {
+                        startGameLoop.join();
+                        break;
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                startGameLoop.start();
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format,
+                                       int width, int height) {
+            }
+        });
+        setFocusable(true);
 
         this.util = new Util();
 
         // Set up the text to speech by passing it the context
-        this.util.SetUpTTS(this);
-        QTV = (TextView) findViewById(R.id.quick_start_askquestion);
+        this.util.SetUpTTS(this.activity);
 
-        Configuration.LoadSettings(this);
+        Configuration.LoadSettings(this.activity);
     }
 
-    protected void onStart() {
-        super.onStart();
-
-        Boolean isNewGame = getIntent().getExtras().getBoolean("com.atobia.worddomino.isNewGame", true);
-        if (!isNewGame) {
-            this.game = util.LoadGame(this);
+    public void run() {
+        if (this.isLoadGame) {
+            this.game = util.LoadGame(this.activity);
         }
 
         // Loadgame can fail and return null. Start a new game in that case.
-        if (isNewGame || this.game == null) {
-            this.game = new Game(this);
-            this.game.wd = this.util.LoadWordsFromFile(this);
-            this.game.CurrentState = EnumGameState.ASKFORWORD;
+        if (this.isLoadGame || this.game == null) {
+            this.game = new Game(this.activity);
+            this.game.wd = this.util.LoadWordsFromFile(this.activity);
+            this.game.CurrentState = EnumGameState.ASK_FOR_WORD;
 
             new CountDownTimer((int) Configuration.DEFAULT_TIME_TO_WAIT, Configuration.TIME_INCREMENT) {
                 public void onTick(long millisUntilFinished) {
                     String strNumOfSeconds = Long.toString(millisUntilFinished / Configuration.TIME_INCREMENT);
                     String toSpeak = strNumOfSeconds;
-                    QTV.setText("Game starts in: " + millisUntilFinished / Configuration.TIME_INCREMENT);
+                    QTV.setText("Game starts in: " + millisUntilFinished);
                     util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
                 }
 
                 public void onFinish() {
-                    GameManager();
+                    startGameLoop.run();
                 }
             }.start();
         } else {
             // The load game doesn't need the countdown.
-            GameManager();
+            this.startGameLoop.run();
         }
     }
 
-    protected void GameManager() {
-        // Keep on going until the game is over
-        while (!this.game.isGameOver) {
-            switch (this.game.CurrentState) {
-                case ASKFORWORD:
-                    AskForWord();
-                    break;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
+    }
 
-                case LISTENFORWORD:
-                    ListenForWord();
-                    break;
+    public void ListenForWord() {
+        Intent myIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        myIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
 
-                case PROCESSANSWER:
+        try {
+            this.activity.startActivityForResult(myIntent, RESULT_SPEECH);
+        } catch (ActivityNotFoundException aex) {
+            Toast t = Toast.makeText(this.activity,
+                    "Your device doesn't support Speech to Text",
+                    Toast.LENGTH_SHORT);
+            t.show();
+        } catch (Exception ex) {
+            Toast t = Toast.makeText(this.activity,
+                    "An expected exception occurred :/",
+                    Toast.LENGTH_SHORT);
+            t.show();
+        }
+    }
+
+    public void ListenerResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RESULT_SPEECH: {
+                if (resultCode == this.activity.RESULT_OK && null != data) {
+                    ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    long timeStoppedListening = System.nanoTime();
+                    double totalTime = (timeStoppedListening - timeStartedListening) / 1000000;
+                    this.lastAnswer = text.get(0);
+
+                    this.QTV.setText(this.lastAnswer + " took " + Double.toString(totalTime) + " milliseconds");
+
                     ProcessAnswer();
-                    break;
-
-                case RETORT:
-                    Retort();
-                    break;
+                }
+                break;
             }
         }
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-    protected void AskForWord() {
+    public void AskForWord() {
         Random r = new Random();
         char c = (char) (r.nextInt(WordDictionary.arrayUpperBound) + 'a');
         String strInstruction = "Name a city that starts with the letter: " + Character.toUpperCase(c);
@@ -127,75 +182,22 @@ public class StartGame extends Activity {
 
             @Override
             public void onDone(String utteranceId) {
-                game.CurrentState = EnumGameState.LISTENFORWORD;
+                game.CurrentState = EnumGameState.LISTEN_FOR_WORD;
                 //ListenForWord();
             }
         };
+        this.QTV.setText(strInstruction);
+
         this.util.tts.setOnUtteranceProgressListener(upl);
 
         HashMap<String, String> map = new HashMap<String, String>();
         map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "messageID");
 
         this.util.tts.speak(strInstruction, TextToSpeech.QUEUE_FLUSH, map);
-        QTV.setText(strInstruction);
-    }
-
-    private void ListenForWord() {
-        Intent myIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        myIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
-
-        try {
-            startActivityForResult(myIntent, RESULT_SPEECH);
-
-            new CountDownTimer((int)Configuration.DEFAULT_TIME_TO_WAIT, Configuration.TIME_INCREMENT) {
-                public void onTick(long millisUntilFinished) {
-                    String strNumOfSeconds = Long.toString(millisUntilFinished
-                            / Configuration.TIME_INCREMENT);
-                    String toSpeak = strNumOfSeconds;
-                    QTV.setText("Game starts in: " + millisUntilFinished
-                            / Configuration.TIME_INCREMENT);
-                    util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-                }
-
-                public void onFinish() {}
-            }.start();
-
-        } catch (ActivityNotFoundException aex) {
-            Toast t = Toast.makeText(getApplicationContext(),
-                    "Your device doesn't support Speech to Text",
-                    Toast.LENGTH_SHORT);
-            t.show();
-        } catch (Exception ex) {
-            Toast t = Toast.makeText(getApplicationContext(),
-                    "An expected exception occurred :/",
-                    Toast.LENGTH_SHORT);
-            t.show();
-        }
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case RESULT_SPEECH: {
-                if (resultCode == RESULT_OK && null != data) {
-                    ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    long timeStoppedListening = System.nanoTime();
-                    double totalTime = (timeStoppedListening - timeStartedListening) / 1000000;
-                    QTV.setText(text.get(0) + " took " + Double.toString(totalTime)
-                            + " milliseconds");
-
-                    this.lastAnswer = text.get(0);
-                    this.game.CurrentState = EnumGameState.PROCESSANSWER;
-                    //ProcessAnswer();
-                }
-                break;
-            }
-        }
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-    protected void ProcessAnswer() {
+    public void ProcessAnswer() {
         // Wait some time before she responds
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -210,14 +212,16 @@ public class StartGame extends Activity {
             } else {
                 // Update the amount of strikes
                 int numOfStrikesLeft = game.FailedAnswer();
-    
+
                 // Ruh Roh
                 if (numOfStrikesLeft < 0) {
                     // No more strikes, finish the game. You're OUT!
                     game.GameOver();
+
                     toSpeak = "3 strikes, game is over.";
-                    this.util.SpeakAndOutPut(QTV, toSpeak);
-    
+                    this.util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                    QTV.setText(toSpeak);
+
                     // Todo Go back to main menu
                     return;
                 } else {
@@ -239,7 +243,8 @@ public class StartGame extends Activity {
                 }
 
                 @Override
-                public void onError(String utteranceId) {}
+                public void onError(String utteranceId) {
+                }
 
                 @Override
                 public void onDone(String utteranceId) {
@@ -253,31 +258,36 @@ public class StartGame extends Activity {
             map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "ProcessAnswerResponse");
 
             this.util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, map);
-            QTV.setText(toSpeak);
+            this.QTV.setText(toSpeak);
 
         } catch (Exception ex) {
             // Uh-oh
             toSpeak = "Sorry, an error has occurred.";
-            this.util.SpeakAndOutPut(QTV, toSpeak);
+
+            this.util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+            this.QTV.setText(toSpeak);
             Log.e("Exception", ex.getMessage());
         }
     }
 
-    private void Retort() {
-        Toast.makeText(getApplicationContext(), "In retort", Toast.LENGTH_LONG).show();
+    public void Retort() {
         char c = this.lastAnswer.charAt(0);
 
         String retort = game.wd.FindAnswer(c);
         // Find answer can return empty
         if ("".equals(retort)) {
             String toSpeak = "Well, this is embarrassing. I'm stumped, you win.";
-            this.util.SpeakAndOutPut(QTV, toSpeak);
+            this.util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+            this.QTV.setText(toSpeak);
+
             this.game.GameOver();
         } else {
             String toSpeak = "My turn. Something that starts with the letter " + Character.toUpperCase(c);
             toSpeak += " How about...." + retort;
-            this.util.SpeakAndOutPut(QTV, toSpeak);
-            this.game.CurrentState = EnumGameState.ASKFORWORD;
+            this.util.tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+            this.QTV.setText(toSpeak);
+
+            this.game.CurrentState = EnumGameState.ASK_FOR_WORD;
         }
     }
 }

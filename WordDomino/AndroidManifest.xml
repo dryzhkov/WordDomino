@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.atobia.worddomino.StartGame"
+            android:name="com.atobia.worddomino.StartGameActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
