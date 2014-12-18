@@ -5,9 +5,10 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-import com.atobia.worddomino.ui.DepthPageTransformer;
+
 import com.atobia.worddomino.ui.SettingsPage;
 import com.atobia.worddomino.ui.PageFragment;
+import com.atobia.worddomino.ui.ZoomOutPageTransformer;
 import com.atobia.worddomino.util.Configuration;
 import com.atobia.worddomino.ui.PageAdapter;
 
@@ -92,7 +93,7 @@ public class SettingsActivity extends FragmentActivity {
         pageAdapter.addPage(gameDiffPage);
         pageAdapter.addPage(firstPlayerPage);
         viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setPageTransformer(true, new DepthPageTransformer());
+        viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
         viewPager.setAdapter(pageAdapter);
 
         Configuration.LoadSettings(this);

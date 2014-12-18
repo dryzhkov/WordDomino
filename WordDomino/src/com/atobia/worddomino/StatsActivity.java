@@ -3,6 +3,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
 import android.widget.TableLayout;
 import android.widget.TableRow.LayoutParams;
 import android.widget.TableRow;
@@ -23,7 +24,6 @@ public class StatsActivity extends FragmentActivity {
     private StatsManager statsManager;
     private PageAdapter pageAdapter;
     private ViewPager viewPager;
-    private String textColor = "#000000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,23 +45,10 @@ public class StatsActivity extends FragmentActivity {
             public void run() {
                 PageFragment frag = (PageFragment) pageAdapter.instantiateItem(viewPager, 0);
                 TableLayout totalGames = (TableLayout)frag.rootView.findViewById(R.id.tblTotalGames);
-                TableRow newRow = null;
-                TextView newView = null;
                 for(int i = 0; i < gameDifficultyId.length; i++) {
-                    //create new row for total games
-                    newRow = new TableRow(StatsActivity.this.getApplicationContext());
-                    newRow.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT));
-                    //column 1: difficulty name
-                    newView = new TextView(StatsActivity.this.getApplicationContext());
-                    newView.setText(gameDifficultyName[i]);
-                    newView.setTextColor(Color.parseColor(textColor));
-                    newRow.addView(newView);
-                    //column 2: number of games played
-                    newView = new TextView(StatsActivity.this.getApplicationContext());
-                    newView.setText(String.valueOf(statsManager.GetTotalGames(gameDifficultyId[i])));
-                    newView.setTextColor(Color.parseColor(textColor));
-                    newRow.addView(newView);
                     //add row to the total games table
+                    TableRow newRow = createTableRow(gameDifficultyName[i],
+                            String.valueOf(statsManager.GetTotalGames(gameDifficultyId[i])));
                     totalGames.addView(newRow, i);
                 }
             }
@@ -74,23 +61,10 @@ public class StatsActivity extends FragmentActivity {
             public void run() {
                 PageFragment frag = (PageFragment) pageAdapter.instantiateItem(viewPager, 1);
                 TableLayout highestScore = (TableLayout)frag.rootView.findViewById(R.id.tblHighestScores);
-                TableRow newRow = null;
-                TextView newView = null;
                 for(int i = 0; i < gameDifficultyId.length; i++){
-                    //create new row for highest scores
-                    newRow = new TableRow(StatsActivity.this.getApplicationContext());
-                    newRow.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT));
-                    //column 1: difficulty name
-                    newView = new TextView(StatsActivity.this.getApplicationContext());
-                    newView.setText(gameDifficultyName[i]);
-                    newView.setTextColor(Color.parseColor(textColor));
-                    newRow.addView(newView);
-                    //column 2: score
-                    newView = new TextView(StatsActivity.this.getApplicationContext());
-                    newView.setText(String.valueOf(statsManager.GetHighestScore(gameDifficultyId[i])));
-                    newView.setTextColor(Color.parseColor(textColor));
-                    newRow.addView(newView);
                     //add row to the highest score table
+                    TableRow newRow = createTableRow(gameDifficultyName[i],
+                            String.valueOf(statsManager.GetHighestScore(gameDifficultyId[i])));
                     highestScore.addView(newRow, i);
                 }
             }
@@ -103,22 +77,10 @@ public class StatsActivity extends FragmentActivity {
             public void run() {
                 PageFragment frag = (PageFragment) pageAdapter.instantiateItem(viewPager, 2);
                 TableLayout longestStreaks = (TableLayout)frag.rootView.findViewById(R.id.tblLongestStreaks);
-                TableRow newRow = null;
-                TextView newView = null;
                 for(int i = 0; i < gameDifficultyId.length; i++) {
-                    newRow = new TableRow(StatsActivity.this.getApplicationContext());
-                    newRow.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT));
-                    //column 1: difficulty name
-                    newView = new TextView(StatsActivity.this.getApplicationContext());
-                    newView.setText(gameDifficultyName[i]);
-                    newView.setTextColor(Color.parseColor(textColor));
-                    newRow.addView(newView);
-                    //column 2: streak value
-                    newView = new TextView(StatsActivity.this.getApplicationContext());
-                    newView.setText(String.valueOf(statsManager.GetLongestStreak(gameDifficultyId[i])));
-                    newView.setTextColor(Color.parseColor(textColor));
-                    newRow.addView(newView);
                     //add row to the longest streak table
+                    TableRow newRow = createTableRow(gameDifficultyName[i],
+                            String.valueOf(statsManager.GetLongestStreak(gameDifficultyId[i])));
                     longestStreaks.addView(newRow, i);
                 }
             }
@@ -131,7 +93,8 @@ public class StatsActivity extends FragmentActivity {
             public void run() {
                 PageFragment frag = (PageFragment) pageAdapter.instantiateItem(viewPager, 3);
                 TextView bestLetterView = (TextView)frag.rootView.findViewById(R.id.tvBestLetter);
-
+                bestLetterView.setTextSize(TypedValue.COMPLEX_UNIT_PT, StatsPage.txtSize);
+                bestLetterView.setTextColor(Color.parseColor(StatsPage.textColor));
                 StatsManager.Letter bestLetter = statsManager.GetBestLetter();
                 if(bestLetter != null){
                     bestLetterView.setText(
@@ -148,6 +111,23 @@ public class StatsActivity extends FragmentActivity {
         viewPager.setAdapter(pageAdapter);
     }
 
+    private TableRow createTableRow(String col1, String col2){
+        TableRow row = new TableRow(StatsActivity.this.getApplicationContext());
+        row.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT));
+        //column 1
+        TextView view = new TextView(StatsActivity.this.getApplicationContext());
+        view.setText(col1);
+        view.setTextSize(TypedValue.COMPLEX_UNIT_PT, StatsPage.txtSize);
+        view.setTextColor(Color.parseColor(StatsPage.textColor));
+        row.addView(view);
+        //column 2
+        view = new TextView(StatsActivity.this.getApplicationContext());
+        view.setText(col2);
+        view.setTextSize(TypedValue.COMPLEX_UNIT_PT, StatsPage.txtSize);
+        view.setTextColor(Color.parseColor(StatsPage.textColor));
+        row.addView(view);
+        return row;
+    }
     /*
     private void TestUsage(){
         Configuration.LoadSettings(this);

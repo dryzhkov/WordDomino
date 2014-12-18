@@ -8,18 +8,11 @@
         android:layout_centerInParent="true"
         android:id="@+id/relativeLayout">
 
-        <TextView
-            android:id="@+id/tvTotalGames"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/total_games_played_title"
-            />
         <TableLayout
             android:id="@+id/tblTotalGames"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvTotalGames"
+            android:textSize="11pt"
             android:layout_centerHorizontal="true">
         </TableLayout>
     </RelativeLayout>

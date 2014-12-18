@@ -4,14 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/game_difficulty_title"
-        android:layout_gravity="center_horizontal"
-        />
-
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,19 +21,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/gamediff_easy"
+                android:textSize="12pt"
                 android:checked="true" />
 
             <RadioButton
                 android:id="@+id/rb_gamediff_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/gamediff_medium" />
+                android:text="@string/gamediff_medium"
+                android:textSize="12pt" />
 
             <RadioButton
                 android:id="@+id/rb_gamediff_hard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/gamediff_hard" />
+                android:text="@string/gamediff_hard"
+                android:textSize="12pt" />
 
         </RadioGroup>
     </RelativeLayout>

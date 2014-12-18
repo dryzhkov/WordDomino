@@ -7,17 +7,8 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" >
 
-        <TextView
-            android:id="@+id/tvHighestScore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/highest_score_title"
-            />
-
         <TableLayout
             android:id="@+id/tblHighestScores"
-            android:layout_below="@+id/tvHighestScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true">

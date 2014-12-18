@@ -8,18 +8,11 @@
         android:layout_centerInParent="true" >
 
         <TextView
-            android:id="@+id/tvBestLetterTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/best_letter_title"
-            />
-        <TextView
             android:id="@+id/tvBestLetter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_below="@+id/tvBestLetterTitle"
             />
     </RelativeLayout>
 </RelativeLayout>
