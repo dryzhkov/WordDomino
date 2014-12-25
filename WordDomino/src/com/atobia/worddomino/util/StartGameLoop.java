@@ -7,6 +7,7 @@ import com.atobia.worddomino.StartGame;
 public class StartGameLoop extends Thread {
     private final int FPS = 10;
     private StartGame view;
+    public boolean shouldRun = true;
 
     public StartGameLoop(StartGame view) {
         this.view = view;
@@ -20,7 +21,7 @@ public class StartGameLoop extends Thread {
         int timesSleptInARow = 0;
 
         // Keep on going until the game is over
-        while (!this.view.game.isGameOver) {
+        while (this.shouldRun) {
             switch (this.view.game.CurrentState) {
                 case ASK_FOR_WORD:
                     timesSleptInARow = 0;
@@ -48,15 +49,20 @@ public class StartGameLoop extends Thread {
                     this.view.Retort();
                     break;
 
+                case GAME_OVER:
+                    this.shouldRun = false;
+                    this.view.game.GameOver();
+                    break;
+
                 case WORKING_SHORT_SLEEP:
 
                     // 500 sleeps is enough to know that something is wrong
-                    if (500 < timesSleptInARow) {
+                    if (timesSleptInARow < 500) {
                         SystemClock.sleep(sleepMilliSec);
                         timesSleptInARow++;
                     } else {
                         // We should decide what to do here. For now, this will do.
-                        this.view.game.GameOver();
+                        this.view.game.CurrentState = EnumGameState.GAME_OVER;
                     }
                     break;
 

@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.atobia.worddomino.util.Configuration;
 import com.atobia.worddomino.util.Game;
-import com.atobia.worddomino.util.MailSender;
 import com.atobia.worddomino.util.SafetyNoticeDialog;
 import com.atobia.worddomino.util.Util;
 

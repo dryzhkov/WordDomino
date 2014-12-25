@@ -61,6 +61,7 @@ public class StartGame extends SurfaceView {
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
+                startGameLoop.shouldRun = false;
                 while (true) {
                     try {
                         startGameLoop.join();
@@ -72,6 +73,7 @@ public class StartGame extends SurfaceView {
 
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
+                startGameLoop.shouldRun = true;
                 startGameLoop.start();
             }
 

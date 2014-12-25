@@ -8,6 +8,7 @@ public enum EnumGameState {
         3. onActivityResult() -- This is the result from the listener. Gets called automatically from ListenForWord()
         4. ProcessAnswer() -- Checks if the user's answer is correct
         5. Retort() -- The AI's answer to the user's word
+        6. GameOver
 
         Working States
         There is a WORKING_LONG_SLEEP state that is in the middle of each of the other states
@@ -17,6 +18,7 @@ public enum EnumGameState {
     LISTEN_FOR_WORD,
     PROCESS_ANSWER,
     RETORT,
+    GAME_OVER,
     WORKING_LONG_SLEEP,
     WORKING_SHORT_SLEEP
 
