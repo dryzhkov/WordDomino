@@ -16,6 +16,7 @@ public class Configuration {
     public static final String RESUME_GAME_FILE_NAME = "resume_game.xml";
     public static final String RESUME_GAME_DIR_NAME = "data/save";
     public static final int VOICE_RECOGNITION_REQUEST_CODE = 1001;
+    public static final String UTTERANCE_KEY = "UTTERANCE_ID";
 
     public static int GameDifficulty = 0;
     public static int FirstPlayer = 0;

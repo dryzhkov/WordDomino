@@ -9,9 +9,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Locale;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,8 +23,24 @@ import com.google.gson.Gson;
 
 public class Util {
     private Context context;
-    public TextToSpeech tts;
+    private TextToSpeech tts;
 
+    public Util(Context c){
+        this.context = c;
+        tts = new TextToSpeech(this.context, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR){
+                    tts.setLanguage(Locale.US);
+                }else{
+                    Toast t = Toast.makeText(context,
+                            "Text To Speech is not supported",
+                            Toast.LENGTH_SHORT);
+                    t.show();
+                }
+            }
+        });
+    }
     public static WordDictionary LoadWordsFromFile(Context c){
         WordDictionary myDictionary = new WordDictionary();
         InputStream ins = c.getResources().openRawResource(R.raw.cities);
@@ -42,24 +61,6 @@ public class Util {
             e.printStackTrace();
         }
         return myDictionary;
-    }
-
-    public void SetUpTTS(Context c){
-        context = c;
-        tts = new TextToSpeech(c, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
-                    tts.setLanguage(Locale.US);
-                }else{
-                    Toast t = Toast.makeText(context,
-                            "Text To Speech is not supported",
-                            Toast.LENGTH_SHORT);
-                    t.show();
-                }
-            }
-        });
-
     }
 
     public static int AtoI(char c){
@@ -137,4 +138,32 @@ public class Util {
         }
         return loadedGame;
     }
+
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+    public void speak(String msg, Runnable onFinish){
+        final Runnable r = onFinish;
+        tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+
+            @Override
+            public void onStart(String utteranceId) {
+            }
+
+            @Override
+            public void onError(String utteranceId) {
+            }
+
+            @Override
+            public void onDone(String utteranceId) {
+                if(utteranceId.equals(Configuration.UTTERANCE_KEY)) {
+                    tts.stop();
+                    if(r != null) {
+                        r.run();
+                    }
+                }
+            }
+        });
+
+        tts.speak(msg, TextToSpeech.QUEUE_FLUSH, null, Configuration.UTTERANCE_KEY);
+    }
+
 }

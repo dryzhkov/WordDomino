@@ -70,7 +70,7 @@ public class Game {
 
     /**
      * decrements the numOfStrikesLeft and calls GameOver if necessary
-     * 
+     *
      * @return numOfStrikesLeft
      */
     public int FailedAnswer() {
