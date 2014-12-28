@@ -1,12 +1,17 @@
 package com.atobia.worddomino;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.atobia.worddomino.util.Configuration;
 import com.atobia.worddomino.util.SafetyNoticeDialog;
@@ -26,7 +31,9 @@ public class StartGameActivity extends Activity {
     public void onStart(){
         super.onStart();
         this.sg = new StartGame(this);
-        sg.run();
+        this.sg.setBackgroundColor(Color.WHITE);
+        LinearLayout layout = (LinearLayout)findViewById(R.id.rootLayout);
+        layout.addView(this.sg);
     }
 
     @Override
@@ -34,8 +41,6 @@ public class StartGameActivity extends Activity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         this.sg.ListenerResult(requestCode, resultCode, data);
     }
-
 }

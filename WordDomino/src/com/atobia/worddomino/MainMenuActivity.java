@@ -5,11 +5,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputFilter;
-import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 import com.atobia.worddomino.util.Configuration;
 import com.atobia.worddomino.util.Game;
@@ -32,7 +29,7 @@ public class MainMenuActivity extends Activity {
         }
     }
 
-    public void StartGame_Clicked(View view) {
+    public void NewGame_Clicked(View view) {
         Intent intent = new Intent(this, StartGameActivity.class);
         intent.putExtra("com.atobia.worddomino.isNewGame", true);
         startActivity(intent);
@@ -41,7 +38,7 @@ public class MainMenuActivity extends Activity {
     public void onBackPressed(){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder
-                .setTitle("Promise you'll come back!")
+                .setTitle("Quit Game")
                 .setMessage("Are you sure you want to quit?")
                 .setCancelable(false)
                 .setPositiveButton("Yes",new DialogInterface.OnClickListener()
@@ -71,11 +68,6 @@ public class MainMenuActivity extends Activity {
         super.onResume();
         Configuration.SaveSettings(this);
         super.onStop();
-    }
-
-    public void NewGame_Clicked(View view) {
-        super.onResume();
-        startActivity(new Intent(this, StartGameActivity.class));
     }
 
     public void ResumeGame_Clicked(View view) {

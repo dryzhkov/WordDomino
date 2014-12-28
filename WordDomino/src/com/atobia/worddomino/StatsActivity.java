@@ -8,7 +8,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow.LayoutParams;
 import android.widget.TableRow;
 import android.widget.TextView;
-
 import com.atobia.worddomino.ui.PageAdapter;
 import com.atobia.worddomino.ui.PageFragment;
 import com.atobia.worddomino.ui.StatsPage;
@@ -98,7 +97,7 @@ public class StatsActivity extends FragmentActivity {
                 StatsManager.Letter bestLetter = statsManager.GetBestLetter();
                 if(bestLetter != null){
                     bestLetterView.setText(
-                            String.format("Your best letter is '%s' with the current success ration of percent %.2f percent.",
+                            String.format("Your best letter is '%s' with a success rate of %.2f percent.",
                                     bestLetter.GetCharacter(),
                                     bestLetter.GetSuccessRatio() * 100));
                 }else{

@@ -9305,7 +9305,7 @@ Melber
 Melbourne
 Melbourne Beach
 Melbourne Villag
-Melcher-Dallas
+Melcher Dallas
 Melcroft
 Melder
 Melfa
@@ -15497,7 +15497,6 @@ Wakeman
 Wakita
 Wakonda
 Wakpala
-Wal-Mart Inc
 Walbridge
 Walcott
 Walden

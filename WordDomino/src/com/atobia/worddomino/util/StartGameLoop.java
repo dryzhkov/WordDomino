@@ -1,6 +1,7 @@
 package com.atobia.worddomino.util;
 
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.atobia.worddomino.StartGame;
 
@@ -18,54 +19,40 @@ public class StartGameLoop extends Thread {
         long sleepMilliSec = 1000 / FPS;
         this.view.startTime = System.currentTimeMillis();
 
-        int timesSleptInARow = 0;
-
         // Keep on going until the game is over
         while (this.shouldRun) {
             switch (this.view.game.CurrentState) {
+                case NEW_GAME:
+                    this.view.game.CurrentState = EnumGameState.WORKING_SHORT_SLEEP;
+                    this.view.CountDown();
+                    break;
                 case ASK_FOR_WORD:
-                    timesSleptInARow = 0;
                     this.view.game.CurrentState = EnumGameState.WORKING_SHORT_SLEEP;
                     this.view.AskForWord();
                     break;
-
                 case LISTEN_FOR_WORD:
-                    timesSleptInARow = 0;
                     this.view.game.CurrentState = EnumGameState.WORKING_SHORT_SLEEP;
-
-                    // Starting the Listener requires being on the view thread
                     this.view.ListenForWord();
                     break;
-
                 case PROCESS_ANSWER:
-                    timesSleptInARow = 0;
                     this.view.game.CurrentState = EnumGameState.WORKING_SHORT_SLEEP;
                     this.view.ProcessAnswer();
                     break;
-
                 case RETORT:
-                    timesSleptInARow = 0;
                     this.view.game.CurrentState = EnumGameState.WORKING_SHORT_SLEEP;
                     this.view.Retort();
                     break;
-
                 case GAME_OVER:
                     this.shouldRun = false;
                     this.view.game.GameOver();
                     break;
-
-                case WORKING_SHORT_SLEEP:
-
-                    // 500 sleeps is enough to know that something is wrong
-                    if (timesSleptInARow < 500) {
-                        SystemClock.sleep(sleepMilliSec);
-                        timesSleptInARow++;
-                    } else {
-                        // We should decide what to do here. For now, this will do.
-                        this.view.game.CurrentState = EnumGameState.GAME_OVER;
-                    }
+                case NEXT_ROUND:
+                    this.view.game.CurrentState = EnumGameState.WORKING_SHORT_SLEEP;
+                    this.view.NextRound();
                     break;
-
+                case WORKING_SHORT_SLEEP:
+                    SystemClock.sleep(sleepMilliSec);
+                    break;
                 default:
                     this.view.game.CurrentState = EnumGameState.WORKING_SHORT_SLEEP;
             }

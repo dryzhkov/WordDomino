@@ -19,14 +19,12 @@ import com.atobia.worddomino.R;
 import com.google.gson.Gson;
 
 public class Util {
-    private Activity activity;
-    private WordDictionary myDictionary;
+    private Context context;
     public TextToSpeech tts;
 
-    public WordDictionary LoadWordsFromFile(Activity a){
-        this.activity = a;
-        myDictionary = new WordDictionary();
-        InputStream ins = this.activity.getResources().openRawResource(R.raw.cities);
+    public static WordDictionary LoadWordsFromFile(Context c){
+        WordDictionary myDictionary = new WordDictionary();
+        InputStream ins = c.getResources().openRawResource(R.raw.cities);
         BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
 
         String line;
@@ -46,21 +44,22 @@ public class Util {
         return myDictionary;
     }
 
-    public void SetUpTTS(Activity a){
-        this.activity = a;
-        tts = new TextToSpeech(this.activity.getApplicationContext(), new TextToSpeech.OnInitListener() {
+    public void SetUpTTS(Context c){
+        context = c;
+        tts = new TextToSpeech(c, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR){
                     tts.setLanguage(Locale.US);
                 }else{
-                    Toast t = Toast.makeText(Util.this.activity.getApplicationContext(),
+                    Toast t = Toast.makeText(context,
                             "Text To Speech is not supported",
                             Toast.LENGTH_SHORT);
                     t.show();
                 }
             }
         });
+
     }
 
     public static int AtoI(char c){
