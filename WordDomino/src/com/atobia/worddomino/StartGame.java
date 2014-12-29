@@ -146,46 +146,55 @@ public class StartGame extends SurfaceView {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                String toSpeak;
-                try {
-                    //TODO: We need to check the first letter, before accepting the answer
-                    boolean isOver = false;
+                String toSpeak = "";
+                boolean noStrikesLeft = false;
+                boolean isValidAnswer = true;
 
-                    if (game.wd.MarkAsUsed(lastAnswer)) {
-                        toSpeak = lastAnswer + " is correct!";
+                //Answer is incorrect if:
+                //1. Not in the dictionary of valid words
+                //2. Doesn't start with the required letter
+                try {
+
+                    if(lastAnswer.charAt(0) != startCharacter){
+                        toSpeak = "Incorrect. Word " +  lastAnswer + " does not start with letter " + startCharacter + ".";
+                        isValidAnswer = false;
+                    }else if (!game.wd.MarkAsUsed(lastAnswer)) {
+                        toSpeak = "Incorrect. Word " +  lastAnswer + " is not a valid city.";
+                        isValidAnswer = false;
                     } else {
+                        toSpeak = lastAnswer + " is correct!";
+                    }
+
+                    if(!isValidAnswer){
                         // Update the amount of strikes
                         int numOfStrikesLeft = game.FailedAnswer();
-
                         // Ruh Roh
-                        if (numOfStrikesLeft < 0) {
+                        if (numOfStrikesLeft < 1) {
                             // No more strikes, finish the game. You're OUT!
-                            toSpeak = "3 strikes, game is over.";
-                            isOver = true;
-                        } else {
+                            toSpeak += " 3 strikes, game is over.";
+                            noStrikesLeft = true;
+                        } else if (numOfStrikesLeft == 1){
                             // We still have a few more strikes
-                            if (numOfStrikesLeft == 0) {
-                                toSpeak = "Incorrect. This is your last strike.";
-                            } else {
-                                toSpeak = "Incorrect, " + Integer.toString(numOfStrikesLeft + 1) + " strikes left.";
-                            }
+                            toSpeak += " This is your last strike.";
+                        } else {
+                            toSpeak += " " + Integer.toString(numOfStrikesLeft) + " strikes left.";
                         }
                     }
 
                     QTV.setText(toSpeak);
-
-                    if(!isOver) {
+                    //Game is over if answer is not valid and player has no strikes left.
+                    if(!isValidAnswer && noStrikesLeft) {
                         util.speak(toSpeak, new Runnable() {
                             @Override
                             public void run() {
-                                game.CurrentState = EnumGameState.RETORT;
+                                game.CurrentState = EnumGameState.GAME_OVER;
                             }
                         });
                     }else{
                         util.speak(toSpeak, new Runnable() {
                             @Override
                             public void run() {
-                                game.CurrentState = EnumGameState.GAME_OVER;
+                                game.CurrentState = EnumGameState.RETORT;
                             }
                         });
                     }
