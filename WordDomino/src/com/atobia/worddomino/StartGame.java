@@ -28,7 +28,7 @@ public class StartGame extends SurfaceView {
     public long startTime;
     private TextView QTV;
     public Game game;
-    private Util util;
+    public Util util;
     public boolean isLoadGame = false;
     public long timeStartedListening;
     public String lastAnswer;
@@ -230,26 +230,20 @@ public class StartGame extends SurfaceView {
     }
 
     public void CountDown(){
-        handler.postDelayed(new Runnable() {
+        String toShow = "Game is about to start! Get Ready!";
+        QTV.setText(toShow);
+
+        String toSpeak = "Game starts in 3. 2. 1. Go: ";
+        util.speak(toSpeak, new Runnable() {
             @Override
             public void run() {
-                new CountDownTimer((int) Configuration.DEFAULT_TIME_TO_WAIT, Configuration.TIME_INCREMENT) {
-                    public void onTick(long millisUntilFinished) {
-                        String strNumOfSeconds = Long.toString(millisUntilFinished / Configuration.TIME_INCREMENT);
-                        String toSpeak = strNumOfSeconds;
-                        QTV.setText("Game starts in: " + strNumOfSeconds);
-                        util.speak(toSpeak, null);
-                    }
-
-                    public void onFinish() {
-                        game.CurrentState = EnumGameState.ASK_FOR_WORD;
-                    }
-                }.start();
+                game.CurrentState = EnumGameState.ASK_FOR_WORD;
             }
-        }, Configuration.RETORT_WAIT_TIME);
+        });
     }
 
     public void NextRound(){
+        this.util.SaveGame(this.myContext, this.game);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {

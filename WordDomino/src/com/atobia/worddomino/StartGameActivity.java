@@ -37,6 +37,11 @@ public class StartGameActivity extends Activity {
     }
 
     @Override
+    public void onBackPressed(){
+        this.sg.util.SaveGame(this, this.sg.game);
+    }
+
+    @Override
     public void onStop(){super.onStop();}
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
