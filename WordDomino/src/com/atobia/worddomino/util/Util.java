@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Locale;
 
 import android.annotation.TargetApi;
@@ -163,7 +164,11 @@ public class Util {
             }
         });
 
-        tts.speak(msg, TextToSpeech.QUEUE_FLUSH, null, Configuration.UTTERANCE_KEY);
+        HashMap<String, String> params = new HashMap<>();
+
+        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, Configuration.UTTERANCE_KEY);
+
+        tts.speak(msg,TextToSpeech.QUEUE_FLUSH, params);
     }
 
 }

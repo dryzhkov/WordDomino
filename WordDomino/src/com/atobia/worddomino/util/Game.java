@@ -14,7 +14,6 @@ public class Game {
     private int numOfStrikesLeft;
     private Set<String> failedWords;
     private Set<String> successWords;
-    private Context context;
 
     // Public Variables
     public WordDictionary wd;
@@ -22,10 +21,7 @@ public class Game {
 
     public EnumGameState CurrentState;
 
-    /**
-     * @param c
-     */
-    public Game(Context c) {
+    public Game() {
         // Initialize
         this.timeLimit = Configuration.DEFAULT_TIME_TO_WAIT;
         this.currentRunningScore = 0;
@@ -34,7 +30,6 @@ public class Game {
         this.numOfStrikesLeft = Configuration.DEFAULT_NUM_OF_STRIKES;
         this.failedWords = new HashSet<String>();
         this.successWords = new HashSet<String>();
-        this.context = c;
     }
 
     /**
@@ -88,8 +83,8 @@ public class Game {
         return this.numOfStrikesLeft;
     }
 
-    public void GameOver() {
-        StatsManager sm = new StatsManager(this.context);
+    public void GameOver(Context context) {
+        StatsManager sm = new StatsManager(context);
         if (sm.IsInitiated()) {
             // Increment total number of games
             sm.IncrementTotalGames(Configuration.GameDifficulty);

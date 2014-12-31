@@ -3,7 +3,6 @@ package com.atobia.worddomino;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.util.Log;
@@ -23,10 +22,10 @@ import java.util.Random;
 public class StartGame extends SurfaceView {
     private StartGameLoop startGameLoop;
     private Handler handler;
-    private Context myContext;
     private Activity myActivity;
     public long startTime;
     private TextView QTV;
+    public Context myContext;
     public Game game;
     public Util util;
     public boolean isLoadGame = false;
@@ -49,7 +48,7 @@ public class StartGame extends SurfaceView {
         }
 
         if(!this.isLoadGame || this.game == null){
-            this.game = new Game(this.myContext);
+            this.game = new Game();
             this.game.wd = this.util.LoadWordsFromFile(this.myActivity);
             this.game.CurrentState = EnumGameState.NEW_GAME;
         }
@@ -143,7 +142,7 @@ public class StartGame extends SurfaceView {
 
     public void ProcessAnswer() {
         // They gave an answer, let's make sure that it was a valid one
-        handler.postDelayed(new Runnable() {
+        handler.post(new Runnable() {
             @Override
             public void run() {
                 String toSpeak = "";
@@ -202,7 +201,7 @@ public class StartGame extends SurfaceView {
                     Log.e("Exception", ex.getMessage());
                 }
             }
-        }, Configuration.RETORT_WAIT_TIME);
+        });
     }
 
     public void Retort() {
@@ -220,7 +219,7 @@ public class StartGame extends SurfaceView {
                     util.speak(toSpeak, new Runnable() {
                         @Override
                         public void run() {
-                            game.CurrentState = EnumGameState.GAME_OVER;
+                        game.CurrentState = EnumGameState.GAME_OVER;
                         }
                     });
                 } else {
@@ -239,21 +238,24 @@ public class StartGame extends SurfaceView {
     }
 
     public void CountDown(){
-        String toShow = "Game is about to start! Get Ready!";
-        QTV.setText(toShow);
-
-        String toSpeak = "Game starts in 3. 2. 1. Go: ";
-        util.speak(toSpeak, new Runnable() {
+        handler.post(new Runnable() {
             @Override
             public void run() {
-                game.CurrentState = EnumGameState.ASK_FOR_WORD;
+                String toSpeak = "Game starts in - 3. 2. 1. Go!";
+                QTV.setText(toSpeak);
+                util.speak(toSpeak, new Runnable() {
+                    @Override
+                    public void run() {
+                        game.CurrentState = EnumGameState.ASK_FOR_WORD;
+                    }
+                });
             }
         });
     }
 
     public void NextRound(){
-        this.util.SaveGame(this.myContext, this.game);
-        handler.postDelayed(new Runnable() {
+        Util.SaveGame(this.myContext, this.game);
+        handler.post(new Runnable() {
             @Override
             public void run() {
                 String toSpeak = "Your turn.";
@@ -265,6 +267,11 @@ public class StartGame extends SurfaceView {
                     }
                 });
             }
-        }, Configuration.RETORT_WAIT_TIME);
+        });
+    }
+
+    public void GameOver(){
+        this.game.GameOver(this.myContext);
+        ((Activity) this.myContext).finish();
     }
 }
