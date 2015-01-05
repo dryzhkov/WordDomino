@@ -3,6 +3,7 @@ package com.atobia.worddomino;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.util.Log;
@@ -254,7 +255,7 @@ public class StartGame extends SurfaceView {
     }
 
     public void NextRound(){
-        Util.SaveGame(this.myContext, this.game);
+        new SaveGameTask().execute(this.myContext, this.game);
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -273,5 +274,18 @@ public class StartGame extends SurfaceView {
     public void GameOver(){
         this.game.GameOver(this.myContext);
         ((Activity) this.myContext).finish();
+    }
+}
+
+class SaveGameTask extends AsyncTask<Object, Context, Void>
+{
+    @Override
+    /**
+     * Params[0] = Context
+     * Params[1] = Game
+     */
+    protected Void doInBackground(Object... params) {
+        Util.SaveGame((Context)params[0], (Game)params[1]);
+        return null;
     }
 }

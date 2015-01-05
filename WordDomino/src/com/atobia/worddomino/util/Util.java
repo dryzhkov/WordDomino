@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.UUID;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -143,6 +144,7 @@ public class Util {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
     public void speak(String msg, Runnable onFinish){
         final Runnable r = onFinish;
+        final String uniqueID = UUID.randomUUID().toString();
         tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
 
             @Override
@@ -155,7 +157,7 @@ public class Util {
 
             @Override
             public void onDone(String utteranceId) {
-                if(utteranceId.equals(Configuration.UTTERANCE_KEY)) {
+                if(utteranceId.equals(uniqueID)) {
                     tts.stop();
                     if(r != null) {
                         r.run();
@@ -166,7 +168,7 @@ public class Util {
 
         HashMap<String, String> params = new HashMap<>();
 
-        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, Configuration.UTTERANCE_KEY);
+        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, uniqueID);
 
         tts.speak(msg,TextToSpeech.QUEUE_FLUSH, params);
     }
