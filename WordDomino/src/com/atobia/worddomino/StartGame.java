@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class StartGame extends SurfaceView {
-    private StartGameLoop startGameLoop;
+    public StartGameLoop startGameLoop;
     private Handler handler;
     private Activity myActivity;
     public long startTime;
@@ -285,6 +285,7 @@ class SaveGameTask extends AsyncTask<Object, Context, Void>
      * Params[1] = Game
      */
     protected Void doInBackground(Object... params) {
+        Configuration.SavedGameExists = true;
         Util.SaveGame((Context)params[0], (Game)params[1]);
         return null;
     }

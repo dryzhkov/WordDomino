@@ -38,6 +38,8 @@ public class StartGameActivity extends Activity {
 
     @Override
     public void onBackPressed(){
+        super.onBackPressed();
+        this.sg.startGameLoop.shouldRun = false;
         this.sg.util.SaveGame(this, this.sg.game);
     }
 

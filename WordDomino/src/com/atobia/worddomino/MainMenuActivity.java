@@ -21,7 +21,14 @@ public class MainMenuActivity extends Activity {
 
         //hide/show resume button
         Button btnResume = (Button)findViewById(R.id.btnResumeGame);
+
+        Game loadedGame = Util.LoadGame(this);
+        if(loadedGame != null){
+            Configuration.SavedGameExists = true;
+        }
+
         btnResume.setEnabled(Configuration.SavedGameExists);
+
         Configuration.LoadSettings(this);
         if(Configuration.ShowSafetyScreen){
             SafetyNoticeDialog snd = new SafetyNoticeDialog();
@@ -71,12 +78,9 @@ public class MainMenuActivity extends Activity {
     }
 
     public void ResumeGame_Clicked(View view) {
-        Toast.makeText(getApplicationContext(), "Resume Game Clicked!",
-                Toast.LENGTH_LONG).show();
-        Game loadedGame = Util.LoadGame(this);
-        if(loadedGame != null){
-            //resume game code here
-        }
+        Intent intent = new Intent(this, StartGameActivity.class);
+        intent.putExtra("com.atobia.worddomino.isNewGame", false);
+        startActivity(intent);
     }
 
     public void Settings_Clicked(View view) {
