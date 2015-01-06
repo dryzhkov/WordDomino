@@ -10,13 +10,10 @@ public class Configuration {
     public static final String FIRST_PLAYER_KEY = "FIRST_PLAYER";
     public static final String SHOW_SAFETY_SCREEN_KEY = "SHOW_SAFETY_SCREEN";
     public static final double DEFAULT_TIME_TO_WAIT = 5000;
-    public static final int TIME_INCREMENT = 1000;
-    public static final int RETORT_WAIT_TIME = 2000;
     public static final int DEFAULT_NUM_OF_STRIKES = 3;
     public static final String RESUME_GAME_FILE_NAME = "resume_game.xml";
     public static final String RESUME_GAME_DIR_NAME = "data/save";
     public static final int VOICE_RECOGNITION_REQUEST_CODE = 1001;
-    public static final String UTTERANCE_KEY = "UTTERANCE_ID";
 
     public static int GameDifficulty = 0;
     public static int FirstPlayer = 0;
