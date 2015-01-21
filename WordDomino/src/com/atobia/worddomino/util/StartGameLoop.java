@@ -17,7 +17,6 @@ public class StartGameLoop extends Thread {
     @Override
     public void run() {
         long sleepMilliSec = 1000 / FPS;
-        this.view.startTime = System.currentTimeMillis();
 
         // Keep on going until the game is over
         while (this.shouldRun) {

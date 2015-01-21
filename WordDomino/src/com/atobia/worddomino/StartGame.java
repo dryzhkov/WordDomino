@@ -11,6 +11,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.atobia.worddomino.util.Configuration;
 import com.atobia.worddomino.util.EnumGameState;
 import com.atobia.worddomino.util.Game;
@@ -24,14 +26,13 @@ public class StartGame extends SurfaceView {
     public StartGameLoop startGameLoop;
     private Handler handler;
     private Activity myActivity;
-    public long startTime;
     private TextView QTV;
     public Context myContext;
     public Game game;
     public Util util;
     public boolean isLoadGame = false;
-    public long timeStartedListening;
-    public String lastAnswer;
+    public long timeStartedListening = 0;
+    public String lastAnswer = "";
     public char startCharacter = ' ';
 
     public StartGame(Activity activity) {
@@ -42,7 +43,7 @@ public class StartGame extends SurfaceView {
         setFocusable(true);
         this.util = new Util(this.myContext);
 
-        Configuration.LoadSettings(this.myContext);
+        //Configuration.LoadSettings(this.myContext);
 
         if (this.isLoadGame) {
             this.game = util.LoadGame(this.myContext);
@@ -255,7 +256,10 @@ public class StartGame extends SurfaceView {
     }
 
     public void NextRound(){
+        /*
+        Commenting out for now because of performance hit
         new SaveGameTask().execute(this.myContext, this.game);
+        */
         handler.post(new Runnable() {
             @Override
             public void run() {

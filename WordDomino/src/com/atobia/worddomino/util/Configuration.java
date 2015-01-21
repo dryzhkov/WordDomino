@@ -2,6 +2,7 @@ package com.atobia.worddomino.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.speech.tts.TextToSpeech;
 
 public class Configuration {
     // Constants
@@ -14,6 +15,8 @@ public class Configuration {
     public static final String RESUME_GAME_FILE_NAME = "resume_game.xml";
     public static final String RESUME_GAME_DIR_NAME = "data/save";
     public static final int VOICE_RECOGNITION_REQUEST_CODE = 1001;
+    public static final int GAME_MIN_VOLUME = 3; //min 0, max 15
+    public static final int GAME_AUDIO_STREAM = TextToSpeech.Engine.DEFAULT_STREAM;
 
     public static int GameDifficulty = 0;
     public static int FirstPlayer = 0;

@@ -2,10 +2,13 @@ package com.atobia.worddomino;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,11 +28,19 @@ public class StartGameActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_game);
-    }
+        setVolumeControlStream(Configuration.GAME_AUDIO_STREAM);
 
-    @Override
-    public void onStart(){
-        super.onStart();
+        //check current volume
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int curVol = audioManager.getStreamVolume(Configuration.GAME_AUDIO_STREAM);
+
+        if(curVol < Configuration.GAME_MIN_VOLUME){
+            //TODO: we need to handle this case somehow, displaying toast message for now
+            Toast.makeText(getApplicationContext(),
+                    "Game Volume is too low. ",
+                    Toast.LENGTH_SHORT).show();
+        }
+
         this.sg = new StartGame(this);
         this.sg.setBackgroundColor(Color.WHITE);
         LinearLayout layout = (LinearLayout)findViewById(R.id.rootLayout);
@@ -40,11 +51,11 @@ public class StartGameActivity extends Activity {
     public void onBackPressed(){
         super.onBackPressed();
         this.sg.startGameLoop.shouldRun = false;
+        /*
+        Commenting out for now because of performance hit
         this.sg.util.SaveGame(this, this.sg.game);
+        */
     }
-
-    @Override
-    public void onStop(){super.onStop();}
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

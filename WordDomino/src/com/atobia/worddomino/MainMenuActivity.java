@@ -18,6 +18,7 @@ public class MainMenuActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
+        setVolumeControlStream(Configuration.GAME_AUDIO_STREAM);
 
         //hide/show resume button
         Button btnResume = (Button)findViewById(R.id.btnResumeGame);
@@ -28,7 +29,6 @@ public class MainMenuActivity extends Activity {
         }
 
         btnResume.setEnabled(Configuration.SavedGameExists);
-
         Configuration.LoadSettings(this);
         if(Configuration.ShowSafetyScreen){
             SafetyNoticeDialog snd = new SafetyNoticeDialog();

@@ -96,13 +96,7 @@ public class SettingsActivity extends FragmentActivity {
         viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
         viewPager.setAdapter(pageAdapter);
 
-        Configuration.LoadSettings(this);
-}
-
-    @Override
-    public void onBackPressed(){
-        Configuration.SaveSettings(this);
-        SettingsActivity.this.finish();
+        //Configuration.LoadSettings(this);
     }
 
     @Override
