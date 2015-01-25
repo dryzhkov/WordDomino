@@ -2,9 +2,9 @@ apply plugin: 'android'
 
 dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
-    compile files('libs/gson-2.3.jar')
     compile 'com.android.support:support-v4:21.0.2'
     compile 'com.android.support:appcompat-v7:21.0.2'
+    compile 'com.google.android.gms:play-services:6.5.87'
 }
 
 android {
@@ -33,5 +33,9 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
     }
 }

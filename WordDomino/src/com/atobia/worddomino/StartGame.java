@@ -3,7 +3,6 @@ package com.atobia.worddomino;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.util.Log;
@@ -11,8 +10,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.atobia.worddomino.util.Configuration;
 import com.atobia.worddomino.util.EnumGameState;
 import com.atobia.worddomino.util.Game;
@@ -30,7 +27,7 @@ public class StartGame extends SurfaceView {
     public Context myContext;
     public Game game;
     public Util util;
-    public boolean isLoadGame = false;
+
     public long timeStartedListening = 0;
     public String lastAnswer = "";
     public char startCharacter = ' ';
@@ -43,13 +40,10 @@ public class StartGame extends SurfaceView {
         setFocusable(true);
         this.util = new Util(this.myContext);
 
-        //Configuration.LoadSettings(this.myContext);
+        this.game = Configuration.LoadedGame;
 
-        if (this.isLoadGame) {
-            this.game = util.LoadGame(this.myContext);
-        }
-
-        if(!this.isLoadGame || this.game == null){
+        if(this.game == null){
+            //new game
             this.game = new Game();
             this.game.wd = this.util.LoadWordsFromFile(this.myActivity);
             this.game.CurrentState = EnumGameState.NEW_GAME;
@@ -256,10 +250,7 @@ public class StartGame extends SurfaceView {
     }
 
     public void NextRound(){
-        /*
-        Commenting out for now because of performance hit
-        new SaveGameTask().execute(this.myContext, this.game);
-        */
+        //TODO: need to save game using GP API
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -278,19 +269,5 @@ public class StartGame extends SurfaceView {
     public void GameOver(){
         this.game.GameOver(this.myContext);
         ((Activity) this.myContext).finish();
-    }
-}
-
-class SaveGameTask extends AsyncTask<Object, Context, Void>
-{
-    @Override
-    /**
-     * Params[0] = Context
-     * Params[1] = Game
-     */
-    protected Void doInBackground(Object... params) {
-        Configuration.SavedGameExists = true;
-        Util.SaveGame((Context)params[0], (Game)params[1]);
-        return null;
     }
 }

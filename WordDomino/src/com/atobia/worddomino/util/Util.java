@@ -89,56 +89,28 @@ public class Util {
         return targetFile;
     }
 
-    public static boolean SaveGame(Context c, Game curGame){
-        if(curGame == null){
-            return false;
-        }
+    public static byte[] GameToBytes(Game input){
         try {
-            String dataToSave = new Gson().toJson(curGame);
-            File target = EnsureFileExists(c,
-                    Configuration.RESUME_GAME_DIR_NAME,
-                    Configuration.RESUME_GAME_FILE_NAME,
-                    Context.MODE_PRIVATE);
-            FileOutputStream outputStream = new FileOutputStream(target);
-            outputStream.write(dataToSave.getBytes());
-            outputStream.close();
-            Configuration.SavedGameExists = true;
-        } catch (Exception e) {
-            Log.e("Util::SaveGame::Ex", e.toString());
-            return false;
+            String dataToSave = new Gson().toJson(input);
+            Log.d("Util::GameToBytes::Ex", dataToSave);
+            return dataToSave.getBytes();
+        }catch(Exception ex){
+            Log.e("Util::GameToBytes::Ex", ex.toString());
         }
-        return true;
+        return null;
     }
-
-    public static Game LoadGame(Context c){
-        if(!Configuration.SavedGameExists){
-            return null;
-        }
-        Game loadedGame = null;
-        StringBuilder data = new StringBuilder();
-        try{
-            File target = EnsureFileExists(c,
-                    Configuration.RESUME_GAME_DIR_NAME,
-                    Configuration.RESUME_GAME_FILE_NAME,
-                    Context.MODE_PRIVATE);
-            InputStream inputStream = new FileInputStream(target);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line = reader.readLine();
-            while(line != null){
-                if(!line.isEmpty()){
-                    data.append(line);
-                }
-                line = reader.readLine();
+    public static Game BytesToGame(byte[] input){
+        Game rtnGame = null;
+        if(input != null){
+            try {
+                String dataToLoad = new String(input);
+                Log.d("Util::GameToBytes::Ex", dataToLoad);
+                rtnGame = new Gson().fromJson(dataToLoad, Game.class);
+            }catch(Exception ex){
+                Log.e("Util::BytesToGame::Ex", ex.toString());
             }
-
-            if(data.length() > 0) { //non-empty file
-                loadedGame =  new Gson().fromJson(data.toString(), Game.class);
-            }
-        }catch(Exception ioex){
-            Log.e("Util::LoadGame::Ex", ioex.toString());
-            loadedGame =  null;
         }
-        return loadedGame;
+        return rtnGame;
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
