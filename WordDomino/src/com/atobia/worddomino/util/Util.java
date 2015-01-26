@@ -18,7 +18,6 @@ import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.atobia.worddomino.R;
 import com.google.android.gms.games.Games;
@@ -183,6 +182,7 @@ public class Util {
 
             @Override
             public void onError(String utteranceId) {
+                tts.stop();
             }
 
             @Override

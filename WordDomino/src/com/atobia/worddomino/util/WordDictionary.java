@@ -138,7 +138,12 @@ public class WordDictionary {
                     curNode.difficulty = Configuration.LetterRanking[asciiIndex];
                 }else{
                     if(curNode.isWord && markAsUsed){
-                        curNode.beenUsed = true;
+                        if(curNode.beenUsed){
+                            //this word already been used, return false
+                            return false;
+                        }else {
+                            curNode.beenUsed = true;
+                        }
                     }
                     return curNode.isWord;
                 }
