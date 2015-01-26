@@ -2,8 +2,6 @@ package com.atobia.worddomino.util;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,7 +11,9 @@ import java.util.UUID;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
@@ -21,6 +21,10 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.atobia.worddomino.R;
+import com.google.android.gms.games.Games;
+import com.google.android.gms.games.snapshot.Snapshot;
+import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
+import com.google.android.gms.games.snapshot.Snapshots;
 import com.google.gson.Gson;
 
 public class Util {
@@ -111,6 +115,60 @@ public class Util {
             }
         }
         return rtnGame;
+    }
+
+    public static void SaveGame(Activity activity, Game g){
+        final boolean createIfMissing = true;
+        final String SNAP_SHOT_NAME = "Snapshot_0";
+        final ProgressDialog progressDialog = new ProgressDialog(activity);
+        final byte[] data  = GameToBytes(g);
+
+        AsyncTask<Void, Void, Boolean> updateTask = new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected void onPreExecute() {
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Saving Game");
+                progressDialog.show();
+
+            }
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                Snapshots.OpenSnapshotResult open = Games.Snapshots.open(
+                        Configuration.GMSClient, SNAP_SHOT_NAME, createIfMissing).await();
+
+                if (!open.getStatus().isSuccess()) {
+                    Log.w("Util::SaveGame", "Could not open Snapshot for update.");
+                    return false;
+                }
+
+                // Change data but leave existing metadata
+                Snapshot snapshot = open.getSnapshot();
+                snapshot.getSnapshotContents().writeBytes(data);
+
+                Snapshots.CommitSnapshotResult commit = Games.Snapshots.commitAndClose(
+                        Configuration.GMSClient, snapshot, SnapshotMetadataChange.EMPTY_CHANGE).await();
+
+                if (!commit.getStatus().isSuccess()) {
+                    Log.w("Util::SaveGame", "Failed to commit Snapshot.");
+                    return false;
+                }
+
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                progressDialog.dismiss();
+                if(result){
+                    Log.d("Util::SaveGame", "Success Saving Same.");
+                    Configuration.SavedGameExists = true;
+                }else{
+                    Log.d("Util::SaveGame", "Failure Saving Same.");
+                }
+            }
+        };
+        updateTask.execute();
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)

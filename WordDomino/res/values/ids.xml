@@ -3,5 +3,8 @@
     <string name="app_id">355243457832</string>
     <string name="achievement_prime">CgkIqPqjsasKEAIQAQ</string>
     <string name="achievement_bored">CgkIqPqjsasKEAIQAg</string>
-    <string name="achievement_really_really_bored">CgkIqPqjsasKEAIQAw</string>
+    <string name="achievement_really_bored">CgkIqPqjsasKEAIQAw</string>
+    <string name="achievement_starting_out">CgkIqPqjsasKEAIQBA</string>
+    <string name="achievement_quick_rabbit">CgkIqPqjsasKEAIQBQ</string>
+    <string name="achievement_boeing_wins">CgkIqPqjsasKEAIQBg</string>
 </resources>

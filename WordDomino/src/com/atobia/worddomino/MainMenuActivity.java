@@ -13,7 +13,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.atobia.worddomino.util.AchievementManager;
 import com.atobia.worddomino.util.Configuration;
+import com.atobia.worddomino.util.EnumGameState;
 import com.atobia.worddomino.util.Game;
 import com.atobia.worddomino.util.SafetyNoticeDialog;
 import com.atobia.worddomino.util.Util;
@@ -58,6 +61,9 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .addApi(Drive.API).addScope(Drive.SCOPE_APPFOLDER)
                 .build();
+
+        Configuration.GMSClient = mGoogleApiClient;
+        AchievementManager.init(this);
     }
 
     @Override
@@ -252,55 +258,11 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
         }
     }
 
-
     public void TestSave_Clicked(View view) {
-        final boolean createIfMissing = true;
-
-        Game curGame = new Game();
-        final byte[] data  = Util.GameToBytes(curGame); //TODO: we need to get game object here
-
-        AsyncTask<Void, Void, Boolean> updateTask = new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected void onPreExecute() {
-                showProgressDialog("Saving Game");
-            }
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                Snapshots.OpenSnapshotResult open = Games.Snapshots.open(
-                        mGoogleApiClient, SNAP_SHOT_NAME, createIfMissing).await();
-
-                if (!open.getStatus().isSuccess()) {
-                    Log.w(TAG, "Could not open Snapshot for update.");
-                    return false;
-                }
-
-                // Change data but leave existing metadata
-                Snapshot snapshot = open.getSnapshot();
-                snapshot.getSnapshotContents().writeBytes(data);
-
-                Snapshots.CommitSnapshotResult commit = Games.Snapshots.commitAndClose(
-                        mGoogleApiClient, snapshot, SnapshotMetadataChange.EMPTY_CHANGE).await();
-
-                if (!commit.getStatus().isSuccess()) {
-                    Log.w(TAG, "Failed to commit Snapshot.");
-                    return false;
-                }
-
-                return true;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                dismissProgressDialog();
-                if(result){
-                    Toast.makeText(MainMenuActivity.this, "Success Saving Same.", Toast.LENGTH_SHORT).show();
-                    Configuration.SavedGameExists = true;
-                }else{
-                    Toast.makeText(MainMenuActivity.this, "Failure Saving Same.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-        updateTask.execute();
+        Game testGame = new Game();
+        testGame.CurrentState = EnumGameState.NEW_GAME;
+        Util.SaveGame(this, testGame);
+        AchievementManager.Achievements.PRIME_ACCOMPLISHED = true;
+        AchievementManager.pushAchievements();
     }
 }

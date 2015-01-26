@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.speech.tts.TextToSpeech;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+
 public class Configuration {
     // Constants
     private static final String PREFERENCES_KEY = "WORDS_APP_PREF_FILE";
@@ -13,8 +15,6 @@ public class Configuration {
     private static final String SAVED_GAME_EXISTS_KEY = "SAVED_GAME_EXISTS";
     public static final double DEFAULT_TIME_TO_WAIT = 5000;
     public static final int DEFAULT_NUM_OF_STRIKES = 3;
-    public static final String RESUME_GAME_FILE_NAME = "resume_game.xml";
-    public static final String RESUME_GAME_DIR_NAME = "data/save";
     public static final int VOICE_RECOGNITION_REQUEST_CODE = 1001;
     public static final int GAME_MIN_VOLUME = 3; //min 0, max 15
     public static final int GAME_AUDIO_STREAM = TextToSpeech.Engine.DEFAULT_STREAM;
@@ -24,6 +24,7 @@ public class Configuration {
     public static boolean ShowSafetyScreen = true;
     public static boolean SavedGameExists = false;
     public static Game LoadedGame = null;
+    public static GoogleApiClient GMSClient = null;
 
     public static int[] LetterRanking = new int[]
     {        DifficultyLevel.EASY, /* a */
@@ -80,5 +81,9 @@ public class Configuration {
         editor.putBoolean(SHOW_SAFETY_SCREEN_KEY, ShowSafetyScreen);
         editor.putBoolean(SAVED_GAME_EXISTS_KEY, SavedGameExists);
         editor.commit();
+    }
+
+    public static boolean IsPlayerSignedIn(){
+        return GMSClient != null && GMSClient.isConnected();
     }
 }
