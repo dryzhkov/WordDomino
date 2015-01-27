@@ -14,6 +14,7 @@ public class WordDictionary {
     public static final int arrayUpperBound = 26; //26 letters + space char
 
     private static final int minWordLength = 2;
+    private int count = 0;
 
     public WordDictionary(){
         root = new WordNode();
@@ -88,6 +89,10 @@ public class WordDictionary {
         return results;
     }
 
+    public int Count(){
+        return count;
+    }
+
     private void FindAllWords(WordNode parentNode, StringBuilder curWord, ArrayList<String> results, boolean excludeUsedWords){
         WordNode curNode;
         for(int i = arrayLowerBound; i <= arrayUpperBound; i++){
@@ -136,6 +141,7 @@ public class WordDictionary {
                     curNode.isWord = true;
                     //look up difficulty ranking
                     curNode.difficulty = Configuration.LetterRanking[asciiIndex];
+                    count++;
                 }else{
                     if(curNode.isWord && markAsUsed){
                         if(curNode.beenUsed){

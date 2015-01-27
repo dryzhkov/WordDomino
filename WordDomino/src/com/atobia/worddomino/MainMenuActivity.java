@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +34,8 @@ import com.google.android.gms.games.snapshot.Snapshots;
 import com.google.android.gms.plus.Plus;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainMenuActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
     private static final String TAG = "MainMenu";
@@ -64,6 +67,20 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
 
         Configuration.GMSClient = mGoogleApiClient;
         AchievementManager.init(this);
+
+        Configuration.TTS  = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR){
+                    Configuration.TTS.setLanguage(Locale.US);
+                }else{
+                    Toast t = Toast.makeText(MainMenuActivity.this,
+                            "Text To Speech is not supported",
+                            Toast.LENGTH_SHORT);
+                    t.show();
+                }
+            }
+        });
     }
 
     @Override

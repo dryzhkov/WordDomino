@@ -32,19 +32,7 @@ public class Util {
 
     public Util(Context c){
         this.context = c;
-        tts = new TextToSpeech(this.context, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
-                    tts.setLanguage(Locale.US);
-                }else{
-                    Toast t = Toast.makeText(context,
-                            "Text To Speech is not supported",
-                            Toast.LENGTH_SHORT);
-                    t.show();
-                }
-            }
-        });
+        tts = Configuration.TTS;
     }
     public static WordDictionary LoadWordsFromFile(Context c){
         WordDictionary myDictionary = new WordDictionary();

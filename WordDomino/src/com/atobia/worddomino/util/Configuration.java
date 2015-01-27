@@ -25,6 +25,7 @@ public class Configuration {
     public static boolean SavedGameExists = false;
     public static Game LoadedGame = null;
     public static GoogleApiClient GMSClient = null;
+    public static TextToSpeech TTS = null;
 
     public static int[] LetterRanking = new int[]
     {        DifficultyLevel.EASY, /* a */
