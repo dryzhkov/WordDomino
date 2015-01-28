@@ -23,7 +23,10 @@ public class StartGame extends SurfaceView {
     public StartGameLoop startGameLoop;
     private Handler handler;
     private Activity myActivity;
-    private TextView QTV;
+    private TextView TVQuestion;
+    private TextView TVPoints;
+    private TextView TVMultiplier;
+    private TextView TVStrikes;
     public Context myContext;
     public Game game;
     public Util util;
@@ -36,7 +39,10 @@ public class StartGame extends SurfaceView {
         super(activity);
         this.myActivity = activity;
         this.myContext = activity.getApplicationContext();
-        this.QTV = (TextView) this.myActivity.findViewById(R.id.quick_start_askquestion);
+        this.TVQuestion = (TextView) this.myActivity.findViewById(R.id.quick_start_askquestion);
+        this.TVPoints = (TextView) this.myActivity.findViewById(R.id.start_game_points);
+        this.TVMultiplier = (TextView) this.myActivity.findViewById(R.id.start_game_multiplier);
+        this.TVStrikes = (TextView) this.myActivity.findViewById(R.id.start_game_strikes);
         setFocusable(true);
         this.util = new Util(this.myContext);
 
@@ -48,6 +54,9 @@ public class StartGame extends SurfaceView {
             this.game.wd = this.util.LoadWordsFromFile(this.myActivity);
             this.game.CurrentState = EnumGameState.NEW_GAME;
         }
+
+        // Show the score
+        displayScoreBoard();
 
         handler = new Handler();
         startGameLoop = new StartGameLoop(this);
@@ -110,8 +119,8 @@ public class StartGame extends SurfaceView {
                 long timeStoppedListening = System.nanoTime();
                 double totalTime = (timeStoppedListening - timeStartedListening) / 1000000;
                 this.lastAnswer = text.get(0).toLowerCase();
-                this.QTV.setText(this.lastAnswer + " took " + Double.toString(totalTime) + " milliseconds");
-                ProcessAnswer();
+                this.TVQuestion.setText(this.lastAnswer + " took " + Double.toString(totalTime) + " milliseconds");
+                ProcessAnswer(totalTime);
             }
         }
     }
@@ -125,7 +134,7 @@ public class StartGame extends SurfaceView {
                     startCharacter = (char) (r.nextInt(WordDictionary.arrayUpperBound) + 'a');
                 }
                 String message = "Name a city that starts with the letter: " + Character.toUpperCase(startCharacter);
-                QTV.setText(message);
+                TVQuestion.setText(message);
                 util.speak(message, new Runnable() {
                     @Override
                     public void run() {
@@ -136,7 +145,8 @@ public class StartGame extends SurfaceView {
         });
     }
 
-    public void ProcessAnswer() {
+    public void ProcessAnswer(double totalTime) {
+        final double totalTimeToAnswer = totalTime;
         // They gave an answer, let's make sure that it was a valid one
         handler.post(new Runnable() {
             @Override
@@ -150,14 +160,20 @@ public class StartGame extends SurfaceView {
                 //2. Doesn't start with the required letter
                 try {
 
-                    if(lastAnswer.charAt(0) != startCharacter){
-                        toSpeak = "Incorrect. Word " +  lastAnswer + " does not start with letter " + startCharacter + ".";
+                    if (lastAnswer == "boeing") {
+                        toSpeak = "Mother-flower, you win the game.";
+                        // TODO: Add boeing achievement
+                    } else if(lastAnswer.charAt(0) != startCharacter){
+                        toSpeak = "Incorrect. " +  capitalizeFirstLetter(lastAnswer) + " does not start with letter " + startCharacter + ".";
                         isValidAnswer = false;
-                    }else if (!game.wd.MarkAsUsed(lastAnswer)) {
-                        toSpeak = "Incorrect. Word " +  lastAnswer + " is not a valid city.";
+                    } else if (!game.wd.MarkAsUsed(lastAnswer)) {
+                        toSpeak = "Incorrect. " + capitalizeFirstLetter(lastAnswer) + " is not a valid city.";
+                        isValidAnswer = false;
+                    } else if (totalTimeToAnswer < game.timeLimit) {
+                        toSpeak = capitalizeFirstLetter(lastAnswer) + " is a valid city but you went over the time limit to answer the question.";
                         isValidAnswer = false;
                     } else {
-                        toSpeak = lastAnswer + " is correct!";
+                        toSpeak = capitalizeFirstLetter(lastAnswer) + " is correct!";
                     }
 
                     if(!isValidAnswer){
@@ -174,9 +190,15 @@ public class StartGame extends SurfaceView {
                         } else {
                             toSpeak += " " + Integer.toString(numOfStrikesLeft) + " strikes left.";
                         }
+                    } else {
+                        // Answer is correct! Add some points.
+                        game.updateScore(totalTimeToAnswer);
                     }
 
-                    QTV.setText(toSpeak);
+                    // Update the score
+                    displayScoreBoard();
+
+                    TVQuestion.setText(toSpeak);
                     //Game is over if answer is not valid and player has no strikes left.
                     if(!isValidAnswer && noStrikesLeft) {
                         util.speak(toSpeak, new Runnable() {
@@ -198,6 +220,12 @@ public class StartGame extends SurfaceView {
                 }
             }
         });
+    }
+
+    public void displayScoreBoard() {
+        TVPoints.setText("Points: " + this.game.getCurrentRunningScore());
+        TVMultiplier.setText("Multiplier X" + this.game.getMultiplier());
+        TVStrikes.setText("Strikes Left: " + this.game.getNumOfStrikesLeft());
     }
 
     public void Retort() {
@@ -228,7 +256,7 @@ public class StartGame extends SurfaceView {
                     });
                     startCharacter = retort.charAt(retort.length() - 1);
                 }
-                QTV.setText(toSpeak);
+                TVQuestion.setText(toSpeak);
             }
         });
     }
@@ -238,7 +266,7 @@ public class StartGame extends SurfaceView {
             @Override
             public void run() {
                 String toSpeak = "Game starts in - 3. 2. 1. Go!";
-                QTV.setText(toSpeak);
+                TVQuestion.setText(toSpeak);
                 util.speak(toSpeak, new Runnable() {
                     @Override
                     public void run() {
@@ -255,7 +283,7 @@ public class StartGame extends SurfaceView {
             @Override
             public void run() {
                 String toSpeak = "Your turn.";
-                QTV.setText(toSpeak);
+                TVQuestion.setText(toSpeak);
                 util.speak(toSpeak, new Runnable() {
                     @Override
                     public void run() {
@@ -267,7 +295,19 @@ public class StartGame extends SurfaceView {
     }
 
     public void GameOver(){
+        this.startGameLoop.shouldRun = false;
         this.game.GameOver(this.myContext);
-        ((Activity) this.myContext).finish();
+        this.myActivity.finish();
+    }
+
+    private String capitalizeFirstLetter(String givenString){
+        String[] arr = givenString.split(" ");
+        StringBuffer sb = new StringBuffer();
+
+        for (int i = 0; i < arr.length; i++) {
+            sb.append(Character.toUpperCase(arr[i].charAt(0)))
+                    .append(arr[i].substring(1)).append(" ");
+        }
+        return sb.toString().trim();
     }
 }
