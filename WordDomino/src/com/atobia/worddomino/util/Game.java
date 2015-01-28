@@ -8,18 +8,32 @@ import java.util.Set;
 public class Game {
     // Private Variables
     private int currentRunningScore;
-    private double timeLimit;
     private int longestStreak;
     private int currentStreak;
+    private int multiplier;
+    private int lastMultiplierIncrease;
     private int numOfStrikesLeft;
     private Set<String> failedWords;
     private Set<String> successWords;
 
     // Public Variables
     public WordDictionary wd;
+    public double timeLimit;
     public boolean isGameOver = false;
-
     public EnumGameState CurrentState;
+
+    /* Getters */
+    public int getCurrentRunningScore() {
+        return currentRunningScore;
+    }
+
+    public int getMultiplier() {
+        return multiplier;
+    }
+
+    public int getNumOfStrikesLeft() {
+        return numOfStrikesLeft;
+    }
 
     public Game() {
         // Initialize
@@ -27,6 +41,8 @@ public class Game {
         this.currentRunningScore = 0;
         this.longestStreak = 0;
         this.currentStreak = 0;
+        this.lastMultiplierIncrease = 0;
+        this.multiplier = 1;
         this.numOfStrikesLeft = Configuration.DEFAULT_NUM_OF_STRIKES;
         this.failedWords = new HashSet<String>();
         this.successWords = new HashSet<String>();
@@ -34,25 +50,14 @@ public class Game {
 
     /**
      * Returns total number of points
-     *
-     * @return integer
      */
-    public int updateScore(double milliSecondsToAnswer) {
-        if (milliSecondsToAnswer < 0) {
-            return -1;
-        }
+    public void updateScore(double milliSecondsToAnswer) {
+        this.setGameMultiplier(false);
 
-        // Only update if they haven't passed the time limit
-        if (milliSecondsToAnswer < this.timeLimit) {
-            this.currentRunningScore += milliSecondsToAnswer;
-            this.currentStreak++;
-        } else {
-            // Incorrect answer: We don't have a word that they failed on, they
-            // didn't answer in the allotted time
-            FailedAnswer();
-        }
+        double timeLeft = this.timeLimit - (milliSecondsToAnswer/100000.0);
 
-        return this.currentRunningScore;
+        this.currentRunningScore += timeLeft * this.multiplier / 10.0;
+        this.currentStreak++;
     }
 
     public boolean AddFailedWord(String word) {
@@ -79,6 +84,8 @@ public class Game {
 
         // Strikes
         this.numOfStrikesLeft--;
+
+        this.setGameMultiplier(true);
 
         return this.numOfStrikesLeft;
     }
@@ -111,8 +118,51 @@ public class Game {
         }
     }
 
-    public double decreaseTimeLimit() {
+    public void decreaseTimeLimit() {
         this.timeLimit *= .75;
-        return this.timeLimit;
+    }
+
+    public void increaseTimeLimit() {
+        this.timeLimit *= 1.3;
+    }
+
+    public int setGameMultiplier(boolean struckOut) {
+        if (struckOut) {
+            // They had a strike, reset the multiplier and make them wait another 3 turns before an increase
+            this.multiplier = 1;
+            lastMultiplierIncrease = 0;
+
+            // Give them more time to think because they are a dumb
+            this.increaseTimeLimit();
+        } else {
+            // Only increase the multiplier every 3 correct answers
+            if (lastMultiplierIncrease == 3) {
+                // They're doing well, decrease the time they have
+                this.decreaseTimeLimit();
+                increaseMultiplier();
+                lastMultiplierIncrease = 0;
+            } else {
+                lastMultiplierIncrease++;
+            }
+        }
+        return this.multiplier;
+    }
+
+    private void increaseMultiplier() {
+        switch (this.multiplier) {
+            case 1:
+                this.multiplier = 2;
+                break;
+            case 2:
+                this.multiplier = 3;
+                break;
+            case 3:
+                this.multiplier = 6;
+                break;
+            case 6:
+            default:
+                this.multiplier = 12;
+                break;
+        }
     }
 }
