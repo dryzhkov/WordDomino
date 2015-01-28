@@ -278,8 +278,30 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
     public void TestSave_Clicked(View view) {
         Game testGame = new Game();
         testGame.CurrentState = EnumGameState.NEW_GAME;
+        /*
         Util.SaveGame(this, testGame);
         AchievementManager.Achievements.PRIME_ACCOMPLISHED = true;
         AchievementManager.pushAchievements();
+        */
+        //
+        char startChar = 'e';
+        testGame.wd = Util.LoadWordsFromFile(this);
+        Configuration.GameDifficulty = Configuration.DifficultyLevel.EASY;
+        ArrayList<String> words = testGame.wd.GetWordsStartingWith(startChar, true);
+        for(String s: words){
+            //Log.d("TestSave_Clicked:Word", s);
+        }
+        Log.d("TestSave", "WD Count " + testGame.wd.Count());
+
+        Log.d("TestSave", "Words starting with '" + startChar +  "' on EASY: " + words.size());
+        Configuration.GameDifficulty = Configuration.DifficultyLevel.MEDIUM;
+        words = testGame.wd.GetWordsStartingWith(startChar, true);
+        Log.d("TestSave", "Words starting with '" + startChar +  "' on MEDIUM: " + words.size());
+        Configuration.GameDifficulty = Configuration.DifficultyLevel.HARD;
+        words = testGame.wd.GetWordsStartingWith(startChar, true);
+        Log.d("TestSave", "Words starting with '" + startChar +  "' on HARD: " + words.size());
+        //testGame.wd.FindAnswer(startChar);
+
+
     }
 }

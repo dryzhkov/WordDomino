@@ -188,8 +188,7 @@ public class Util {
         HashMap<String, String> params = new HashMap<>();
 
         params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, uniqueID);
-
+        Log.d("Util::Speak()", "Now speaking word: [" + msg + "]");
         tts.speak(msg,TextToSpeech.QUEUE_FLUSH, params);
     }
-
 }
