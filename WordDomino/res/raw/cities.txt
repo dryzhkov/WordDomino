@@ -3506,7 +3506,6 @@ Cypress Inn
 Cypress Mill
 Cyril
 Cyrus
-D Hanis
 Dabneys
 Dacoma
 Dacono
@@ -4113,8 +4112,6 @@ Dyersville
 Dyess
 Dyess Afb
 Dysart
-E Town
-E View
 Eads
 Eagan
 Eagar
@@ -7375,7 +7372,6 @@ Juntura
 Jupiter
 Justice
 Justin
-K I Sawyer A F B
 Kaaawa
 Kadoka
 Kahoka
@@ -8714,7 +8710,6 @@ Lysite
 Lytle
 Lytle Creek
 Lytton
-M M
 Mabel
 Maben
 Mabie
@@ -9861,6 +9856,7 @@ Mount Angel
 Mount Arlington
 Mount Auburn
 Mount Ayr
+Mount Baldy
 Mount Bethel
 Mount Blanchard
 Mount Calm
@@ -9922,6 +9918,7 @@ Mount Snow
 Mount Solon
 Mount Sterling
 Mount Storm
+Mount Sylvan
 Mount Tom
 Mount Tremper
 Mount Ulla
@@ -9966,8 +9963,6 @@ Moyie Springs
 Moyock
 Mozelle
 Mozier
-Mt Baldy
-Mt Sylvan
 Mud Butte
 Muenster
 Muir
@@ -10707,9 +10702,6 @@ Nutter Fort Ston
 Nyack
 Nye
 Nyssa
-O Brien
-O Kean
-O Neals
 Oak
 Oak Beach
 Oak Brook
@@ -12783,7 +12775,6 @@ Roulette
 Round Hill
 Round Lake
 Round Mountain
-Round O
 Round Oak
 Round Pond
 Round Rock
@@ -12894,9 +12885,6 @@ Ryderwood
 Rye
 Rye Brook
 Ryegate
-S Coffeyville
-S Ozone Park
-S Richmond Hill
 Sabattus
 Sabetha
 Sabillasville
@@ -12943,6 +12931,7 @@ Saint Charles
 Saint Clair
 Saint Clair Shor
 Saint Clairsvill
+Saint Clairsville
 Saint Cloud
 Saint Croix
 Saint Croix Fall
@@ -12960,6 +12949,7 @@ Saint Germain
 Saint Hedwig
 Saint Helen
 Saint Helena
+Saint Helena Island
 Saint Helens
 Saint Henry
 Saint Hilaire
@@ -14107,9 +14097,6 @@ Squire
 Squires
 Squirrel Hill
 Squirrel Island
-St Clairsville
-St George
-St Helena Island
 Staatsburg
 Stacy
 Stacyville
@@ -14525,7 +14512,6 @@ Syosset
 Syracuse
 Syria
 Syringa
-T Ville
 Tabb
 Taberg
 Tabiona
@@ -15198,7 +15184,6 @@ Utopia
 Uvalda
 Uvalde
 Uxbridge
-V A Hospital
 Vacaville
 Vacherie
 Vada
@@ -15438,10 +15423,6 @@ Vossburg
 Vowinckel
 Vredenburgh
 Vulcan
-W Harrison
-W Hartford
-W Mifflin Fin
-W Townsend
 Wa Keeney
 Waban
 Wabash
@@ -15497,6 +15478,7 @@ Wakeman
 Wakita
 Wakonda
 Wakpala
+Wal Mart Inc
 Walbridge
 Walcott
 Walden

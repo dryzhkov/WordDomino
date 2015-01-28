@@ -119,7 +119,6 @@ public class StartGame extends SurfaceView {
                 long timeStoppedListening = System.nanoTime();
                 double totalTime = (timeStoppedListening - timeStartedListening) / 1000000;
                 this.lastAnswer = text.get(0).toLowerCase();
-                this.TVQuestion.setText(this.lastAnswer + " took " + Double.toString(totalTime) + " milliseconds");
                 ProcessAnswer(totalTime);
             }
         }

@@ -34,6 +34,7 @@ public class Util {
         this.context = c;
         tts = Configuration.TTS;
     }
+
     public static WordDictionary LoadWordsFromFile(Context c){
         WordDictionary myDictionary = new WordDictionary();
         InputStream ins = c.getResources().openRawResource(R.raw.cities);
