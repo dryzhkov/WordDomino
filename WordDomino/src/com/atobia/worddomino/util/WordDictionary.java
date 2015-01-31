@@ -2,6 +2,7 @@ package com.atobia.worddomino.util;
 
 import android.annotation.SuppressLint;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /*
@@ -57,7 +58,7 @@ public class WordDictionary {
      */
     public String FindAnswer(char startChar){
         String answer = "";
-        ArrayList<String> words = GetWordsStartingWith(startChar, true);
+        List<String> words = GetWordsStartingWith(startChar, true);
         if(words != null && words.size() > 0){
             //array worddomino now contains all worddomino that start with a given letter and have not been played yet.
             //the worddomino are also picked based on appropriate game difficulty
@@ -74,12 +75,12 @@ public class WordDictionary {
     /*
      * Returns a list of all worddomino that start with a given letter
      */
-    public ArrayList<String> GetWordsStartingWith(char start, boolean excludeUsedWords){
+    public List<String> GetWordsStartingWith(char start, boolean excludeUsedWords){
         int asciiIndex = Util.AtoI(start);
         if(asciiIndex < arrayLowerBound || asciiIndex > arrayUpperBound){
             throw new IllegalArgumentException("WordDictionary::GetWordsStartingWith::Invalid letter: '" + start + "' ascii index: '" + asciiIndex + "'");
         }
-        ArrayList<String> results = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
         StringBuilder curWord = new StringBuilder();
         curWord.append(start);
         WordNode parentNode = root.children[asciiIndex];
@@ -93,7 +94,7 @@ public class WordDictionary {
         return count;
     }
 
-    private void FindAllWords(WordNode parentNode, StringBuilder curWord, ArrayList<String> results, boolean excludeUsedWords){
+    private void FindAllWords(WordNode parentNode, StringBuilder curWord, List<String> results, boolean excludeUsedWords){
         WordNode curNode;
         for(int i = arrayLowerBound; i <= arrayUpperBound; i++){
             curNode = parentNode.children[i];
@@ -102,7 +103,9 @@ public class WordDictionary {
                 if(curNode.isWord //is a valid word
                         && (!excludeUsedWords || !curNode.beenUsed) //exclude worddomino that have been used, if needed
                         && ((Configuration.GameDifficulty & curNode.difficulty) == curNode.difficulty)){ //match based on game difficulty level
-                    results.add(curWord.toString());
+
+                    String word = curWord.subSequence(0, curWord.length()).toString();
+                    results.add(word);
                 }
                 //recursively go down the list
                 FindAllWords(curNode, curWord, results, excludeUsedWords);

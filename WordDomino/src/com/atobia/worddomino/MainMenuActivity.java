@@ -35,6 +35,7 @@ import com.google.android.gms.plus.Plus;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class MainMenuActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
@@ -127,6 +128,7 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
         if(!mIsResolving) {
             mIsResolving = resolveConnectionFailure(this, mGoogleApiClient, connectionResult, RC_SIGN_IN);
         }
+        dismissProgressDialog();
     }
 
     @Override
@@ -287,12 +289,9 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
         char startChar = 'e';
         testGame.wd = Util.LoadWordsFromFile(this);
         Configuration.GameDifficulty = Configuration.DifficultyLevel.EASY;
-        ArrayList<String> words = testGame.wd.GetWordsStartingWith(startChar, true);
-        for(String s: words){
-            //Log.d("TestSave_Clicked:Word", s);
-        }
-        Log.d("TestSave", "WD Count " + testGame.wd.Count());
+        List<String> words = testGame.wd.GetWordsStartingWith(startChar, true);
 
+        Log.d("TestSave", "WD Count " + testGame.wd.Count());
         Log.d("TestSave", "Words starting with '" + startChar +  "' on EASY: " + words.size());
         Configuration.GameDifficulty = Configuration.DifficultyLevel.MEDIUM;
         words = testGame.wd.GetWordsStartingWith(startChar, true);
@@ -300,8 +299,11 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
         Configuration.GameDifficulty = Configuration.DifficultyLevel.HARD;
         words = testGame.wd.GetWordsStartingWith(startChar, true);
         Log.d("TestSave", "Words starting with '" + startChar +  "' on HARD: " + words.size());
-        //testGame.wd.FindAnswer(startChar);
 
+        for(int i = 0; i < 10; i++) {
+            String retort = testGame.wd.FindAnswer(startChar);
+            Log.d("TestSave", "Found a string to retort [" + retort + "] starting with letter '" + startChar + "'");
+        }
 
     }
 }
