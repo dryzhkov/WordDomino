@@ -12,6 +12,7 @@ public class Configuration {
     private static final String GAME_DIFF_KEY = "GAME_DIFFICULTY";
     private static final String FIRST_PLAYER_KEY = "FIRST_PLAYER";
     private static final String SHOW_SAFETY_SCREEN_KEY = "SHOW_SAFETY_SCREEN";
+    private static final String PLAY_OVER_BLUETOOTH = "PLAY_OVER_BLUETOOTH";
     private static final String SAVED_GAME_EXISTS_KEY = "SAVED_GAME_EXISTS";
     public static final double DEFAULT_TIME_TO_WAIT = 5000;
     public static final int DEFAULT_NUM_OF_STRIKES = 3;
@@ -22,6 +23,7 @@ public class Configuration {
     public static int GameDifficulty = 0;
     public static int FirstPlayer = 0;
     public static boolean ShowSafetyScreen = true;
+    public static boolean PlayOverBluetooth = true;
     public static boolean SavedGameExists = false;
     public static Game LoadedGame = null;
     public static GoogleApiClient GMSClient = null;
@@ -71,6 +73,7 @@ public class Configuration {
         GameDifficulty = settings.getInt(GAME_DIFF_KEY, DifficultyLevel.EASY);
         FirstPlayer = settings.getInt(FIRST_PLAYER_KEY, PlayerType.AI);
         ShowSafetyScreen = settings.getBoolean(SHOW_SAFETY_SCREEN_KEY, true); //show safety screen by default
+        PlayOverBluetooth = settings.getBoolean(PLAY_OVER_BLUETOOTH, true); // Play game over bluetooth by default
         SavedGameExists = settings.getBoolean(SAVED_GAME_EXISTS_KEY, false);
     }
 
@@ -80,6 +83,7 @@ public class Configuration {
         editor.putInt(GAME_DIFF_KEY, GameDifficulty);
         editor.putInt(FIRST_PLAYER_KEY, FirstPlayer);
         editor.putBoolean(SHOW_SAFETY_SCREEN_KEY, ShowSafetyScreen);
+        editor.putBoolean(PLAY_OVER_BLUETOOTH, PlayOverBluetooth);
         editor.putBoolean(SAVED_GAME_EXISTS_KEY, SavedGameExists);
         editor.commit();
     }

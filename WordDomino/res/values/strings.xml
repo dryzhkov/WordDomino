@@ -10,8 +10,11 @@
     <string name="gamediff_hard">Hard</string>
     <string name="game_difficulty_title">Difficulty</string>
     <string name="first_player_title">First Player</string>
+    <string name="play_type_title">Play Type</string>
     <string name="first_player_ai">AI</string>
     <string name="first_player_player">Player</string>
+    <string name="play_over_bluetooth">Bluetooth</string>
+    <string name="play_over_textbox">TextBox</string>
     <string name="btn_save_label">Save</string>
     <string name="btn_stats_label">Stats</string>
     <string name="btn_settings_label">Settings</string>

@@ -2,6 +2,7 @@ package com.atobia.worddomino;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -24,8 +25,8 @@ public class SettingsActivity extends FragmentActivity {
         SettingsPage gameDiffPage = new SettingsPage(R.layout.settings_gamediff_tab,
                 getResources().getString(R.string.game_difficulty_title));
 
-        SettingsPage firstPlayerPage = new SettingsPage(R.layout.settings_firstplayer_tab,
-                getResources().getString(R.string.first_player_title));
+        SettingsPage playOverBluetoothPage = new SettingsPage(R.layout.settings_playoverbluetooth_tab,
+                getResources().getString(R.string.play_type_title));
 
         gameDiffPage.setOnStartFunc(new Runnable() {
             @Override
@@ -46,8 +47,10 @@ public class SettingsActivity extends FragmentActivity {
         gameDiffPage.setOnFinishFunc(new Runnable() {
             @Override
             public void run() {
-                PageFragment frag = (PageFragment) pageAdapter.instantiateItem(viewPager, 0);
-                RadioGroup rgDifficulty = (RadioGroup) frag.rootView.findViewById(R.id.radioGroupGameDiff);
+                PageFragment frag = (PageFragment)pageAdapter.instantiateItem(viewPager, 0);
+                Log.d("findbyview null", Integer.toString(R.id.radioGroupGameDiff));
+                Object a = frag.rootView.findViewById(R.id.radioGroupGameDiff);
+                RadioGroup rgDifficulty = (RadioGroup)a;
                 View selectedButton = rgDifficulty.findViewById(rgDifficulty.getCheckedRadioButtonId());
                 int selectedIndex = rgDifficulty.indexOfChild(selectedButton);
                 if (selectedIndex == 2) {
@@ -60,38 +63,36 @@ public class SettingsActivity extends FragmentActivity {
             }
         });
 
-        firstPlayerPage.setOnStartFunc(new Runnable() {
+        playOverBluetoothPage.setOnStartFunc(new Runnable() {
             @Override
             public void run() {
                 PageFragment frag = (PageFragment) pageAdapter.instantiateItem(viewPager, 1);
-                RadioGroup rgFirstPlayer = (RadioGroup)frag.rootView.findViewById(R.id.radioGroupFirstPlayer);
+                RadioGroup rgPlayOverBluetooth = (RadioGroup)frag.rootView.findViewById(R.id.radioGroupPlayOverBluetooth);
+                Log.d("play over bluetooth setting", Boolean.toString(Configuration.PlayOverBluetooth));
                 //set first player
-                if(Configuration.FirstPlayer == Configuration.PlayerType.Player){
-                    rgFirstPlayer.check(R.id.rb_firstplayer_player);
+                if(Configuration.PlayOverBluetooth){
+                    rgPlayOverBluetooth.check(R.id.rb_playtype_bluetooth);
                 }else{ //default: AI
-                    rgFirstPlayer.check(R.id.rb_firstplayer_ai);
+                    rgPlayOverBluetooth.check(R.id.rb_playtype_textbox);
                 }
             }
         });
 
-        firstPlayerPage.setOnFinishFunc(new Runnable() {
+        playOverBluetoothPage.setOnFinishFunc(new Runnable() {
             @Override
             public void run() {
                 PageFragment frag = (PageFragment) pageAdapter.instantiateItem(viewPager, 1);
-                RadioGroup rgFirstPlayer = (RadioGroup)frag.rootView.findViewById(R.id.radioGroupFirstPlayer);
-                View selectedButton = rgFirstPlayer.findViewById(rgFirstPlayer.getCheckedRadioButtonId());
-                int selectedIndex = rgFirstPlayer.indexOfChild(selectedButton);
+                RadioGroup rgPlayOverBluetooth = (RadioGroup)frag.rootView.findViewById(R.id.radioGroupPlayOverBluetooth);
+                View selectedButton = rgPlayOverBluetooth.findViewById(rgPlayOverBluetooth.getCheckedRadioButtonId());
+                int selectedIndex = rgPlayOverBluetooth.indexOfChild(selectedButton);
 
-                if(selectedIndex == 1){
-                    Configuration.FirstPlayer = Configuration.PlayerType.Player;
-                }else{ //default: AI
-                    Configuration.FirstPlayer = Configuration.PlayerType.AI;
-                }
+                Configuration.PlayOverBluetooth = (selectedIndex == 0);
             }
         });
         pageAdapter = new PageAdapter(getSupportFragmentManager());
         pageAdapter.addPage(gameDiffPage);
-        pageAdapter.addPage(firstPlayerPage);
+        //pageAdapter.addPage(firstPlayerPage);
+        pageAdapter.addPage(playOverBluetoothPage);
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
         viewPager.setAdapter(pageAdapter);

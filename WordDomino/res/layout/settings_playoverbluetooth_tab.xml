@@ -12,22 +12,22 @@
         <RadioGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/radioGroupFirstPlayer">
+            android:id="@+id/radioGroupPlayOverBluetooth">
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/first_player_ai"
+                android:text="@string/play_over_bluetooth"
                 android:textSize="12pt"
-                android:id="@+id/rb_firstplayer_ai"
+                android:id="@+id/rb_playtype_bluetooth"
                 android:checked="true" />
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12pt"
-                android:text="@string/first_player_player"
-                android:id="@+id/rb_firstplayer_player" />
+                android:text="@string/play_over_textbox"
+                android:id="@+id/rb_playtype_textbox" />
 
         </RadioGroup>
     </RelativeLayout>
