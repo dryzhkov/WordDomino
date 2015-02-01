@@ -36,6 +36,11 @@ public class StartGameLoop extends Thread {
                     this.view.game.CurrentState = EnumGameState.WORKING_SHORT_SLEEP;
                     this.view.ListenForWord();
                     break;
+                case WAIT_FOR_TYPING:
+                    Log.d("state change", "LISTEN FOR WORD");
+                    this.view.game.CurrentState = EnumGameState.WORKING_SHORT_SLEEP;
+                    this.view.WaitForTyping();
+                    break;
                 case RETORT:
                     Log.d("state change", "RETORT");
                     this.view.game.CurrentState = EnumGameState.WORKING_SHORT_SLEEP;

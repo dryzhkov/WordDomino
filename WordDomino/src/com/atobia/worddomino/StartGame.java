@@ -6,9 +6,13 @@ import android.content.Intent;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import com.atobia.worddomino.util.Configuration;
 import com.atobia.worddomino.util.EnumGameState;
@@ -27,6 +31,7 @@ public class StartGame extends SurfaceView {
     private TextView TVPoints;
     private TextView TVMultiplier;
     private TextView TVStrikes;
+    private EditText ETAnswer;
     public Context myContext;
     public Game game;
     public Util util;
@@ -43,6 +48,7 @@ public class StartGame extends SurfaceView {
         this.TVPoints = (TextView) this.myActivity.findViewById(R.id.start_game_points);
         this.TVMultiplier = (TextView) this.myActivity.findViewById(R.id.start_game_multiplier);
         this.TVStrikes = (TextView) this.myActivity.findViewById(R.id.start_game_strikes);
+        this.ETAnswer = (EditText) this.myActivity.findViewById(R.id.play_over_text);
         setFocusable(true);
         this.util = new Util(this.myContext);
 
@@ -87,6 +93,30 @@ public class StartGame extends SurfaceView {
         });
     }
 
+    public void AskForWord() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(startCharacter == ' ') {
+                    Random r = new Random();
+                    startCharacter = (char) (r.nextInt(WordDictionary.arrayUpperBound) + 'a');
+                }
+                String message = (Configuration.PlayOverBluetooth ? "Name" : "Type") + " a city that starts with the letter: " + Character.toUpperCase(startCharacter);
+                TVQuestion.setText(message);
+                util.speak(message, new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Configuration.PlayOverBluetooth) {
+                            game.CurrentState = EnumGameState.LISTEN_FOR_WORD;
+                        } else {
+                            game.CurrentState = EnumGameState.WAIT_FOR_TYPING;
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return super.onTouchEvent(event);
@@ -124,22 +154,33 @@ public class StartGame extends SurfaceView {
         }
     }
 
-    public void AskForWord() {
-        handler.post(new Runnable() {
+    public void WaitForTyping() {
+        // Empty out the text
+        //this.ETAnswer.getText().clear();
+
+        this.ETAnswer.requestFocus();
+
+        InputMethodManager imm = (InputMethodManager) this.myActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+
+        this.ETAnswer.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
             @Override
-            public void run() {
-                if(startCharacter == ' ') {
-                    Random r = new Random();
-                    startCharacter = (char) (r.nextInt(WordDictionary.arrayUpperBound) + 'a');
+            public boolean onEditorAction(TextView et, int keyCode, KeyEvent event) {
+                if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
+                        keyCode == EditorInfo.IME_ACTION_DONE ||
+                        event.getAction() == KeyEvent.ACTION_DOWN &&
+                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {                    // hide virtual keyboard
+                    InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(ETAnswer.getWindowToken(), 0);
+
+                    long timeStoppedListening = System.nanoTime();
+                    double totalTime = (timeStoppedListening - timeStartedListening) / 1000000;
+                    lastAnswer = ETAnswer.getText().toString().toLowerCase();
+                    ProcessAnswer(totalTime);
+                    return true;
                 }
-                String message = "Name a city that starts with the letter: " + Character.toUpperCase(startCharacter);
-                TVQuestion.setText(message);
-                util.speak(message, new Runnable() {
-                    @Override
-                    public void run() {
-                        game.CurrentState = EnumGameState.LISTEN_FOR_WORD;
-                    }
-                });
+                return false;
             }
         });
     }
@@ -246,7 +287,7 @@ public class StartGame extends SurfaceView {
                         }
                     });
                 } else {
-                    toSpeak = "My turn. Something that starts with the letter " + Character.toUpperCase(startCharacter) + ". How about " + retort;
+                    toSpeak = "My turn. Something that starts with the letter " + Character.toUpperCase(startCharacter) + ". How about " + capitalizeFirstLetter(retort);
                     util.speak(toSpeak, new Runnable() {
                         @Override
                         public void run() {
