@@ -72,7 +72,7 @@ public class SettingsActivity extends FragmentActivity {
                 //set first player
                 if(Configuration.PlayOverBluetooth){
                     rgPlayOverBluetooth.check(R.id.rb_playtype_bluetooth);
-                }else{ //default: AI
+                }else{
                     rgPlayOverBluetooth.check(R.id.rb_playtype_textbox);
                 }
             }

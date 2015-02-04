@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.atobia.worddomino.util.Configuration;
+import com.atobia.worddomino.util.VolumeDialog;
 
 public class StartGameActivity extends Activity implements DialogInterface.OnClickListener {
     private StartGame sg;
@@ -37,13 +38,9 @@ public class StartGameActivity extends Activity implements DialogInterface.OnCli
             int curVol = audioManager.getStreamVolume(Configuration.GAME_AUDIO_STREAM);
 
             if(curVol < Configuration.GAME_MIN_VOLUME){
-                AlertDialog.Builder audioAD = new AlertDialog.Builder(this);
-                // Turn it down for what?!
-                audioAD.setMessage("Game volume is too low");
-                audioAD.setCancelable(false);
-                audioAD.setNeutralButton("Ok", this);
-                audioAD.show();
-
+                VolumeDialog snd = new VolumeDialog();
+                snd.onAttach(this);
+                snd.show(getFragmentManager(), "volume_notice");
                 // Wait to start the game until they press ok
                 delayGame = true;
             }
@@ -60,7 +57,7 @@ public class StartGameActivity extends Activity implements DialogInterface.OnCli
         }
     }
 
-    private void runGame() {
+    public void runGame() {
         this.sg = new StartGame(this);
         this.sg.setBackgroundColor(Color.WHITE);
         LinearLayout layout = (LinearLayout)findViewById(R.id.rootLayout);

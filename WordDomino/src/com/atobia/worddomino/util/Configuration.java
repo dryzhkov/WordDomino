@@ -10,7 +10,6 @@ public class Configuration {
     // Constants
     private static final String PREFERENCES_KEY = "WORDS_APP_PREF_FILE";
     private static final String GAME_DIFF_KEY = "GAME_DIFFICULTY";
-    private static final String FIRST_PLAYER_KEY = "FIRST_PLAYER";
     private static final String SHOW_SAFETY_SCREEN_KEY = "SHOW_SAFETY_SCREEN";
     private static final String PLAY_OVER_BLUETOOTH = "PLAY_OVER_BLUETOOTH";
     private static final String SAVED_GAME_EXISTS_KEY = "SAVED_GAME_EXISTS";
@@ -21,7 +20,6 @@ public class Configuration {
     public static final int GAME_AUDIO_STREAM = TextToSpeech.Engine.DEFAULT_STREAM;
 
     public static int GameDifficulty = 0;
-    public static int FirstPlayer = 0;
     public static boolean ShowSafetyScreen = true;
     public static boolean PlayOverBluetooth = true;
     public static boolean SavedGameExists = false;
@@ -71,7 +69,6 @@ public class Configuration {
     public static void LoadSettings(Context context){
         SharedPreferences settings = context.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
         GameDifficulty = settings.getInt(GAME_DIFF_KEY, DifficultyLevel.EASY);
-        FirstPlayer = settings.getInt(FIRST_PLAYER_KEY, PlayerType.AI);
         ShowSafetyScreen = settings.getBoolean(SHOW_SAFETY_SCREEN_KEY, true); //show safety screen by default
         PlayOverBluetooth = settings.getBoolean(PLAY_OVER_BLUETOOTH, true); // Play game over bluetooth by default
         SavedGameExists = settings.getBoolean(SAVED_GAME_EXISTS_KEY, false);
@@ -81,7 +78,6 @@ public class Configuration {
         SharedPreferences settings = context.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt(GAME_DIFF_KEY, GameDifficulty);
-        editor.putInt(FIRST_PLAYER_KEY, FirstPlayer);
         editor.putBoolean(SHOW_SAFETY_SCREEN_KEY, ShowSafetyScreen);
         editor.putBoolean(PLAY_OVER_BLUETOOTH, PlayOverBluetooth);
         editor.putBoolean(SAVED_GAME_EXISTS_KEY, SavedGameExists);
