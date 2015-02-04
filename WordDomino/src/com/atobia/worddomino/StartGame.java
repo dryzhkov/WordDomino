@@ -206,14 +206,20 @@ public class StartGame extends SurfaceView {
                     } else if(lastAnswer.charAt(0) != startCharacter){
                         toSpeak = "Incorrect. " +  capitalizeFirstLetter(lastAnswer) + " does not start with letter " + startCharacter + ".";
                         isValidAnswer = false;
-                    } else if (!game.wd.MarkAsUsed(lastAnswer)) {
-                        toSpeak = "Incorrect. " + capitalizeFirstLetter(lastAnswer) + " is not a valid city.";
-                        isValidAnswer = false;
-                    } else if (totalTimeToAnswer < game.timeLimit) {
-                        toSpeak = capitalizeFirstLetter(lastAnswer) + " is a valid city but you went over the time limit to answer the question.";
-                        isValidAnswer = false;
                     } else {
-                        toSpeak = capitalizeFirstLetter(lastAnswer) + " is correct!";
+                        WordDictionary.WDResponse response = game.wd.MarkAsUsed(lastAnswer);
+                        if (response == WordDictionary.WDResponse.INVALID) {
+                            toSpeak = "Incorrect. " + capitalizeFirstLetter(lastAnswer) + " is not a valid city.";
+                            isValidAnswer = false;
+                        }else if (response == WordDictionary.WDResponse.BEEN_USED){
+                            toSpeak = "Sorry. " + capitalizeFirstLetter(lastAnswer) + " has already been used.";
+                            isValidAnswer = false;
+                        } else if (totalTimeToAnswer < game.timeLimit) {
+                            toSpeak = capitalizeFirstLetter(lastAnswer) + " is a valid city but you went over the time limit to answer the question.";
+                            isValidAnswer = false;
+                        } else {
+                            toSpeak = capitalizeFirstLetter(lastAnswer) + " is correct!";
+                        }
                     }
 
                     if(!isValidAnswer){

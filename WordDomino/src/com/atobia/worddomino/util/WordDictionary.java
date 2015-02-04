@@ -31,14 +31,14 @@ public class WordDictionary {
     /*
      * Returns true if worddomino is contained in the dictionary
      */
-    public boolean Contains(String word){
+    public WDResponse Contains(String word){
         return Find(word, false, false);
     }
 
     /*
      * Returns true if worddomino is contained in the dictionary and marks it as used
      */
-    public boolean MarkAsUsed(String word){
+    public WDResponse MarkAsUsed(String word){
         return Find(word, false, true);
     }
 
@@ -116,7 +116,7 @@ public class WordDictionary {
     }
 
     @SuppressLint("DefaultLocale")
-    private boolean Find(String word, boolean shouldAdd, boolean markAsUsed){
+    private WDResponse Find(String word, boolean shouldAdd, boolean markAsUsed){
         Validate(word); //validate input
         word = word.toLowerCase(); //treat all letters as lower case
         WordNode curNode = root; //pointer to the first array of nodes
@@ -135,7 +135,7 @@ public class WordDictionary {
                     curNode = new WordNode();
                     curNodesArray[asciiIndex] = curNode;
                 }else{
-                    return false;
+                    return WDResponse.INVALID;
                 }
             }
 
@@ -148,23 +148,26 @@ public class WordDictionary {
                 }else{
                     if(curNode.isWord && markAsUsed){
                         if(curNode.beenUsed){
-                            //this word already been used, return false
-                            return false;
+                            return WDResponse.BEEN_USED;
                         }else {
                             curNode.beenUsed = true;
                         }
                     }
-                    return curNode.isWord;
+                    return curNode.isWord ? WDResponse.VALID : WDResponse.INVALID;
                 }
             }
         }
-        return true;
+        return WDResponse.VALID;
     }
 
     private void Validate(String input){
         if(input == null || input.length() < minWordLength){
             throw new IllegalArgumentException("Invalid input: [" + input +"]");
         }
+    }
+
+    public enum WDResponse{
+        VALID, INVALID, BEEN_USED
     }
 }
 
@@ -180,3 +183,4 @@ class WordNode{
         this.beenUsed = false;
     }
 }
+
