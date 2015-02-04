@@ -61,15 +61,5 @@
             android:onClick="SendFeedBack_Clicked"
             style="@style/btnMenu"
             />
-
-        <Button
-            android:id="@+id/btnTestSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/btnFeedBack"
-            android:text="Test Save Game"
-            android:onClick="TestSave_Clicked"
-            style="@style/btnMenu"
-            />
     </RelativeLayout>
 </RelativeLayout>
