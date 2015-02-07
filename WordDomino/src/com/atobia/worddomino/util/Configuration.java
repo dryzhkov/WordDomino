@@ -18,6 +18,7 @@ public class Configuration {
     public static final int VOICE_RECOGNITION_REQUEST_CODE = 1001;
     public static final int GAME_MIN_VOLUME = 3; //min 0, max 15
     public static final int GAME_AUDIO_STREAM = TextToSpeech.Engine.DEFAULT_STREAM;
+    public static final String SECRET_ANSWER = "boeing";
 
     public static int GameDifficulty = 0;
     public static boolean ShowSafetyScreen = true;

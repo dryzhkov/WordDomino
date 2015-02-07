@@ -20,14 +20,19 @@
                 android:text="@string/play_over_bluetooth"
                 android:textSize="12pt"
                 android:id="@+id/rb_playtype_bluetooth"
-                android:checked="true" />
+                android:checked="true"
+                style="@style/btnMenu"
+                android:layout_marginBottom="5sp"
+                />
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12pt"
                 android:text="@string/play_over_textbox"
-                android:id="@+id/rb_playtype_textbox" />
+                android:id="@+id/rb_playtype_textbox"
+                style="@style/btnMenu"
+                />
 
         </RadioGroup>
     </RelativeLayout>

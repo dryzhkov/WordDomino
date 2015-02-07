@@ -14,6 +14,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.atobia.worddomino.util.AchievementManager;
 import com.atobia.worddomino.util.Configuration;
 import com.atobia.worddomino.util.EnumGameState;
 import com.atobia.worddomino.util.Game;
@@ -200,9 +202,9 @@ public class StartGame extends SurfaceView {
                 //2. Doesn't start with the required letter
                 try {
 
-                    if (lastAnswer == "boeing") {
+                    if (lastAnswer == Configuration.SECRET_ANSWER /*boeing*/) {
                         toSpeak = "Mother-flower, you win the game.";
-                        // TODO: Add boeing achievement
+                        AchievementManager.Achievements.BOEING_WINS_ACCOMPLISHED = true;
                     } else if(lastAnswer.charAt(0) != startCharacter){
                         toSpeak = "Incorrect. " +  capitalizeFirstLetter(lastAnswer) + " does not start with letter " + startCharacter + ".";
                         isValidAnswer = false;
@@ -324,7 +326,6 @@ public class StartGame extends SurfaceView {
     }
 
     public void NextRound(){
-        //TODO: need to save game using GP API
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -338,10 +339,15 @@ public class StartGame extends SurfaceView {
                 });
             }
         });
+
+        //TODO: need to save game using GP API. (DONE) NOTE: Do we really want to do it here?
+        Util.SaveGame(myActivity, game);
     }
 
     public void GameOver(){
         this.startGameLoop.shouldRun = false;
+        //push achievements
+        AchievementManager.pushAchievements();
         this.game.GameOver(this.myContext);
         this.myActivity.finish();
     }
