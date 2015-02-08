@@ -341,7 +341,7 @@ public class StartGame extends SurfaceView {
         });
 
         //TODO: need to save game using GP API. (DONE) NOTE: Do we really want to do it here?
-        Util.SaveGame(myActivity, game);
+        Util.SaveGame(game);
     }
 
     public void GameOver(){
