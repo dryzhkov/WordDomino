@@ -29,7 +29,9 @@
     <string name="longest_streak_title">Longest Streak</string>
     <string name="best_letter_title">Best Letter</string>
     <string name="title_activity_game_view">GameView</string>
-
+    <string name="rule_text_one">You\'re asked for a city that starts with a letter</string>
+    <string name="rule_text_two">AI will respond with a City that Starts with the Last letter of the city you said</string>
+    <string name="rule_text_three">Then you are expected to answer a city that Starts with the Last letter of AI\'s response</string>
     <string name="title_activity_rules">Rules</string>
 
 </resources>
