@@ -20,6 +20,7 @@
     <string name="btn_settings_label">Settings</string>
     <string name="btn_feedback_label">Send Feedback</string>
     <string name="btn_resume_label">Resume</string>
+    <string name="btn_rules_label">Rules</string>
     <string name="btn_newgame_label">New Game</string>
     <string name="title_activity_stats">StatsActivity</string>
     <string name="action_settings">Settings</string>
@@ -28,5 +29,7 @@
     <string name="longest_streak_title">Longest Streak</string>
     <string name="best_letter_title">Best Letter</string>
     <string name="title_activity_game_view">GameView</string>
+
+    <string name="title_activity_rules">Rules</string>
 
 </resources>

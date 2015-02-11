@@ -304,6 +304,9 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
             String retort = testGame.wd.FindAnswer(startChar);
             Log.d("TestSave", "Found a string to retort [" + retort + "] starting with letter '" + startChar + "'");
         }
+    }
 
+    public void Rules_Clicked(View view) {
+        startActivity(new Intent(this, RulesActivity.class));
     }
 }
