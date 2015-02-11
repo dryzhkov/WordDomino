@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -17,8 +16,6 @@ import android.widget.Toast;
 
 import com.atobia.worddomino.util.AchievementManager;
 import com.atobia.worddomino.util.Configuration;
-import com.atobia.worddomino.util.EnumGameState;
-import com.atobia.worddomino.util.Game;
 import com.atobia.worddomino.util.SafetyNoticeDialog;
 import com.atobia.worddomino.util.Util;
 import com.google.android.gms.common.ConnectionResult;
@@ -28,14 +25,10 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.games.Games;
-import com.google.android.gms.games.snapshot.Snapshot;
-import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
 import com.google.android.gms.games.snapshot.Snapshots;
 import com.google.android.gms.plus.Plus;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class MainMenuActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
@@ -150,9 +143,6 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
 
     public void NewGame_Clicked(View view) {
         Intent intent = new Intent(this, StartGameActivity.class);
-        intent.putExtra("com.atobia.worddomino.isNewGame", true);
-        //TODO: I suggest we replace the intent.putExtra with just having a global variable for a loaded game.
-        //TODO: null means new game
         Configuration.LoadedGame = null;
         startActivity(intent);
     }
@@ -274,35 +264,6 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
                 dialog.show();
             }
             return false;
-        }
-    }
-
-    public void TestSave_Clicked(View view) {
-        Game testGame = new Game();
-        testGame.CurrentState = EnumGameState.NEW_GAME;
-        /*
-        Util.SaveGame(this, testGame);
-        AchievementManager.Achievements.PRIME_ACCOMPLISHED = true;
-        AchievementManager.pushAchievements();
-        */
-        //
-        char startChar = 'e';
-        testGame.wd = Util.LoadWordsFromFile(this);
-        Configuration.GameDifficulty = Configuration.DifficultyLevel.EASY;
-        List<String> words = testGame.wd.GetWordsStartingWith(startChar, true);
-
-        Log.d("TestSave", "WD Count " + testGame.wd.Count());
-        Log.d("TestSave", "Words starting with '" + startChar +  "' on EASY: " + words.size());
-        Configuration.GameDifficulty = Configuration.DifficultyLevel.MEDIUM;
-        words = testGame.wd.GetWordsStartingWith(startChar, true);
-        Log.d("TestSave", "Words starting with '" + startChar +  "' on MEDIUM: " + words.size());
-        Configuration.GameDifficulty = Configuration.DifficultyLevel.HARD;
-        words = testGame.wd.GetWordsStartingWith(startChar, true);
-        Log.d("TestSave", "Words starting with '" + startChar +  "' on HARD: " + words.size());
-
-        for(int i = 0; i < 10; i++) {
-            String retort = testGame.wd.FindAnswer(startChar);
-            Log.d("TestSave", "Found a string to retort [" + retort + "] starting with letter '" + startChar + "'");
         }
     }
 

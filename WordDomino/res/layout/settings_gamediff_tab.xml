@@ -22,21 +22,29 @@
                 android:layout_height="wrap_content"
                 android:text="@string/gamediff_easy"
                 android:textSize="12pt"
-                android:checked="true" />
+                android:checked="true"
+                style="@style/btnMenu"
+                android:layout_marginBottom="5sp"
+                />
 
             <RadioButton
                 android:id="@+id/rb_gamediff_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/gamediff_medium"
-                android:textSize="12pt" />
+                android:textSize="12pt"
+                style="@style/btnMenu"
+                android:layout_marginBottom="5sp"
+                />
 
             <RadioButton
                 android:id="@+id/rb_gamediff_hard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/gamediff_hard"
-                android:textSize="12pt" />
+                android:textSize="12pt"
+                style="@style/btnMenu"
+                />
 
         </RadioGroup>
     </RelativeLayout>

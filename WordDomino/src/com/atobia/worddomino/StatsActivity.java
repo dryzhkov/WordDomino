@@ -113,6 +113,8 @@ public class StatsActivity extends FragmentActivity {
     private TableRow createTableRow(String col1, String col2){
         TableRow row = new TableRow(StatsActivity.this.getApplicationContext());
         row.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT));
+        row.setBackgroundResource(R.drawable.btn_menu_selector);
+
         //column 1
         TextView view = new TextView(StatsActivity.this.getApplicationContext());
         view.setText(col1);
@@ -127,31 +129,4 @@ public class StatsActivity extends FragmentActivity {
         row.addView(view);
         return row;
     }
-    /*
-    private void TestUsage(){
-        Configuration.LoadSettings(this);
-        StatsManager myStatsManager = new StatsManager(this);
-        if(myStatsManager.IsInitiated()) {
-            myStatsManager.IncrementTotalGames(Configuration.GameDifficulty);
-            myStatsManager.UpdateHighestScore(400, Configuration.GameDifficulty);
-            myStatsManager.UpdateStreak(25, Configuration.GameDifficulty);
-
-
-            myStatsManager.UpdateLetterProgress("seattle", true);
-            myStatsManager.UpdateLetterProgress("seattle", false);
-            myStatsManager.UpdateLetterProgress("seattle", false);
-            myStatsManager.UpdateLetterProgress("seattle", false);
-            myStatsManager.UpdateLetterProgress("seattle", false);
-            myStatsManager.UpdateLetterProgress("amega", true);
-            myStatsManager.UpdateLetterProgress("amega", true);
-            myStatsManager.UpdateLetterProgress("amega", false);
-            myStatsManager.UpdateLetterProgress("amega", false);
-            myStatsManager.UpdateLetterProgress("xmen", true);
-            myStatsManager.UpdateLetterProgress("amega", false);
-            myStatsManager.SaveStats();
-            StatsManager.Letter myLetter = myStatsManager.GetBestLetter();
-        }
-
-    }
-    */
 }

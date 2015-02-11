@@ -105,19 +105,15 @@ public class Util {
         return rtnGame;
     }
 
-    public static void SaveGame(Activity activity, Game g){
+    public static void SaveGame(Game g){
         final boolean createIfMissing = true;
         final String SNAP_SHOT_NAME = "Snapshot_0";
-        final ProgressDialog progressDialog = new ProgressDialog(activity);
         final byte[] data  = GameToBytes(g);
 
         AsyncTask<Void, Void, Boolean> updateTask = new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected void onPreExecute() {
-                progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Saving Game");
-                progressDialog.show();
-
+                Log.d("Util::SaveGame", "Saving Game...");
             }
 
             @Override
@@ -141,13 +137,11 @@ public class Util {
                     Log.w("Util::SaveGame", "Failed to commit Snapshot.");
                     return false;
                 }
-
                 return true;
             }
 
             @Override
             protected void onPostExecute(Boolean result) {
-                progressDialog.dismiss();
                 if(result){
                     Log.d("Util::SaveGame", "Success Saving Same.");
                     Configuration.SavedGameExists = true;
