@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+  	android:layout_height="fill_parent"
+	>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_activity_rules"
+        android:textSize="50sp"
+        android:layout_marginBottom="15sp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rule_text_one"
+        android:id="@+id/rule_text_one"
+        android:textSize="20sp"
+        android:visibility="invisible"
+        android:layout_marginBottom="15sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rule_text_two"
+        android:id="@+id/rule_text_two"
+        android:textSize="20sp"
+        android:visibility="invisible"
+        android:layout_marginBottom="15sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rule_text_three"
+        android:id="@+id/rule_text_three"
+        android:textSize="20sp"
+        android:visibility="invisible"
+        android:layout_marginBottom="15sp"
+        />
+</LinearLayout>
