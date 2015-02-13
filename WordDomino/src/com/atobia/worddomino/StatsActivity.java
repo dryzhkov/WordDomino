@@ -1,9 +1,12 @@
 package com.atobia.worddomino;
+import android.annotation.TargetApi;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow.LayoutParams;
 import android.widget.TableRow;
@@ -92,8 +95,6 @@ public class StatsActivity extends FragmentActivity {
             public void run() {
                 PageFragment frag = (PageFragment) pageAdapter.instantiateItem(viewPager, 3);
                 TextView bestLetterView = (TextView)frag.rootView.findViewById(R.id.tvBestLetter);
-                bestLetterView.setTextSize(TypedValue.COMPLEX_UNIT_PT, StatsPage.txtSize);
-                bestLetterView.setTextColor(Color.parseColor(StatsPage.textColor));
                 StatsManager.Letter bestLetter = statsManager.GetBestLetter();
                 if(bestLetter != null){
                     bestLetterView.setText(
@@ -110,23 +111,17 @@ public class StatsActivity extends FragmentActivity {
         viewPager.setAdapter(pageAdapter);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private TableRow createTableRow(String col1, String col2){
-        TableRow row = new TableRow(StatsActivity.this.getApplicationContext());
-        row.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT));
-        row.setBackgroundResource(R.drawable.btn_menu_selector);
-
+        TableRow row = (TableRow) getLayoutInflater().inflate(R.layout.wd_table_row, null);
+        row.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         //column 1
-        TextView view = new TextView(StatsActivity.this.getApplicationContext());
-        view.setText(col1);
-        view.setTextSize(TypedValue.COMPLEX_UNIT_PT, StatsPage.txtSize);
-        view.setTextColor(Color.parseColor(StatsPage.textColor));
-        row.addView(view);
+        TextView txtCol1 = (TextView)row.findViewById(R.id.txtCol1);
+        txtCol1.setText(col1);
         //column 2
-        view = new TextView(StatsActivity.this.getApplicationContext());
-        view.setText(col2);
-        view.setTextSize(TypedValue.COMPLEX_UNIT_PT, StatsPage.txtSize);
-        view.setTextColor(Color.parseColor(StatsPage.textColor));
-        row.addView(view);
+        TextView txtCol2= (TextView)row.findViewById(R.id.txtCol2);
+        txtCol2.setText(col2);
+
         return row;
     }
 }
