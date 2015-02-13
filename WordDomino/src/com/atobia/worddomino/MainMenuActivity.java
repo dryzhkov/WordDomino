@@ -141,6 +141,21 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
         }
     }
 
+    @Override
+    protected void onDestroy(){
+
+        if(Configuration.TTS != null) {
+            Configuration.TTS.stop();
+            Configuration.TTS.shutdown();
+        }
+
+        if(mGoogleApiClient != null){
+            if(mGoogleApiClient.isConnected()){
+                mGoogleApiClient.disconnect();
+            }
+        }
+        super.onDestroy();
+    }
     public void NewGame_Clicked(View view) {
         Intent intent = new Intent(this, StartGameActivity.class);
         Configuration.LoadedGame = null;
