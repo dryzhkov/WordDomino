@@ -29,9 +29,13 @@
     <string name="longest_streak_title">Longest Streak</string>
     <string name="best_letter_title">Best Letter</string>
     <string name="title_activity_game_view">GameView</string>
-    <string name="rule_text_one">You\'re asked for a city that starts with a letter</string>
-    <string name="rule_text_two">AI will respond with a City that Starts with the Last letter of the city you said</string>
-    <string name="rule_text_three">Then you are expected to answer a city that Starts with the Last letter of AI\'s response</string>
+    <string name="rule_text_one">Players take turns coming up with words that begin with the last letter that the previous words ended with.</string>
+    <string name="rule_text_two">For example, Amsterdam -> Montreal -> Los Angeles. This keeps on going until one player doesn\'t answer correctly.</string>
+    <string name="rule_text_three">Also, remember these 3 important rules:</string>
+    <string name="rule_text_four">1. All words have to belong to a certain category (for example: cities).</string>
+    <string name="rule_text_five">2. You can\'t repeat words that have been previously used.</string>
+    <string name="rule_text_six">3. Finally, three strikes and you\'re out.</string>
     <string name="title_activity_rules">Rules</string>
 
 </resources>
+
