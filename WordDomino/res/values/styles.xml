@@ -29,6 +29,5 @@
     <style name="tblCol">
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">12pt</item>
-        <item name="android:layout_marginBottom">5sp</item>
     </style>
 </resources>

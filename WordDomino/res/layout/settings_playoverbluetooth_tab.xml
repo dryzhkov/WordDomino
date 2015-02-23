@@ -22,7 +22,7 @@
                 android:id="@+id/rb_playtype_bluetooth"
                 android:checked="true"
                 style="@style/btnMenu"
-                android:layout_marginBottom="5sp"
+                android:layout_marginBottom="0sp"
                 />
 
             <RadioButton
@@ -32,6 +32,7 @@
                 android:text="@string/play_over_textbox"
                 android:id="@+id/rb_playtype_textbox"
                 style="@style/btnMenu"
+                android:layout_marginBottom="0sp"
                 />
 
         </RadioGroup>

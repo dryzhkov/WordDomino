@@ -24,7 +24,7 @@
                 android:textSize="12pt"
                 android:checked="true"
                 style="@style/btnMenu"
-                android:layout_marginBottom="5sp"
+                android:layout_marginBottom="0sp"
                 />
 
             <RadioButton
@@ -34,7 +34,7 @@
                 android:text="@string/gamediff_medium"
                 android:textSize="12pt"
                 style="@style/btnMenu"
-                android:layout_marginBottom="5sp"
+                android:layout_marginBottom="0sp"
                 />
 
             <RadioButton
@@ -44,6 +44,7 @@
                 android:text="@string/gamediff_hard"
                 android:textSize="12pt"
                 style="@style/btnMenu"
+                android:layout_marginBottom="0sp"
                 />
 
         </RadioGroup>
