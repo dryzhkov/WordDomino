@@ -34,7 +34,7 @@
             android:id="@+id/btnRules"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/btnStartGame"
+            android:layout_below="@+id/btnResumeGame"
             android:text="@string/btn_rules_label"
             android:onClick="Rules_Clicked"
             style="@style/btnMenu"
