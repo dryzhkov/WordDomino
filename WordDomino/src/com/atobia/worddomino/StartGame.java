@@ -19,6 +19,7 @@ import com.atobia.worddomino.util.AchievementManager;
 import com.atobia.worddomino.util.Configuration;
 import com.atobia.worddomino.util.EnumGameState;
 import com.atobia.worddomino.util.Game;
+import com.atobia.worddomino.util.GameOverDialog;
 import com.atobia.worddomino.util.StartGameLoop;
 import com.atobia.worddomino.util.Util;
 import com.atobia.worddomino.util.WordDictionary;
@@ -230,7 +231,7 @@ public class StartGame extends SurfaceView {
                         // Ruh Roh
                         if (numOfStrikesLeft < 1) {
                             // No more strikes, finish the game. You're OUT!
-                            toSpeak += " 3 strikes, game is over.";
+                            toSpeak += " 3 strikes.";
                             noStrikesLeft = true;
                         } else if (numOfStrikesLeft == 1){
                             // We still have a few more strikes
@@ -291,7 +292,7 @@ public class StartGame extends SurfaceView {
                     util.speak(toSpeak, new Runnable() {
                         @Override
                         public void run() {
-                        game.CurrentState = EnumGameState.GAME_OVER;
+                        game.CurrentState = EnumGameState.GAME_WON;
                         }
                     });
                 } else {
@@ -344,12 +345,16 @@ public class StartGame extends SurfaceView {
         Util.SaveGame(game);
     }
 
-    public void GameOver(){
+    public void GameOver(Boolean wonGame){
         this.startGameLoop.shouldRun = false;
         //push achievements
         AchievementManager.pushAchievements();
         this.game.GameOver(this.myContext);
-        this.myActivity.finish();
+
+        GameOverDialog gDialog = new GameOverDialog();
+        gDialog.wonGame = wonGame;
+        gDialog.onAttach(this.myActivity);
+        gDialog.show(this.myActivity.getFragmentManager(), "Game_Over_Dialog");
     }
 
     private String capitalizeFirstLetter(String givenString){

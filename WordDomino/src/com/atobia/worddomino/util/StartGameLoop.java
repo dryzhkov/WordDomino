@@ -49,7 +49,12 @@ public class StartGameLoop extends Thread {
                 case GAME_OVER:
                     Log.d("state change", "GAME OVER");
                     this.shouldRun = false;
-                    this.view.GameOver();
+                    this.view.GameOver(false);
+                    break;
+                case GAME_WON:
+                    Log.d("state change", "GAME WON");
+                    this.shouldRun = false;
+                    this.view.GameOver(true);
                     break;
                 case NEXT_ROUND:
                     Log.d("state change", "NEXT ROUND");

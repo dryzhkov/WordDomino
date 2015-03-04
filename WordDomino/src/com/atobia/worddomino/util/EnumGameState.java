@@ -22,6 +22,7 @@ public enum EnumGameState {
     PROCESS_ANSWER,
     RETORT,
     GAME_OVER,
+    GAME_WON,
     NEXT_ROUND,
     WORKING_SHORT_SLEEP
 }
