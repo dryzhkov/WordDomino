@@ -36,7 +36,6 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
     private static final int RC_SIGN_IN = 9001;
     private static final String DEV_EMAIL = "atobiaapps@gmail.com";
     private static final String SNAP_SHOT_NAME = "Snapshot_0";
-    private GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
     private boolean mIsResolving = false;
     private Button btnResume;
@@ -51,7 +50,7 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
         btnResume = (Button)findViewById(R.id.btnResumeGame);
 
         // Create the Google API Client with access to Plus, Games, and Drive
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        Configuration.GMSClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
@@ -59,7 +58,6 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
                 .addApi(Drive.API).addScope(Drive.SCOPE_APPFOLDER)
                 .build();
 
-        Configuration.GMSClient = mGoogleApiClient;
         AchievementManager.init(this);
 
         Configuration.TTS  = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
@@ -85,7 +83,7 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
 
         showProgressDialog("Signing in.");
         Log.d(TAG, "onStart(): connecting");
-        mGoogleApiClient.connect();
+        Configuration.GMSClient.connect();
     }
 
     @Override
@@ -93,9 +91,9 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
         super.onStop();
 
         Configuration.SaveSettings(this);
-        Log.d(TAG, "onStop(): disconnecting");
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
+        Log.d(TAG, "onStop(): disconnecting GoogleAPIClient");
+        if (Configuration.GMSClient.isConnected()) {
+            Configuration.GMSClient.disconnect();
         }
     }
 
@@ -112,14 +110,14 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
 
     @Override
     public void onConnectionSuspended(int i) {
-        mGoogleApiClient.connect();
+        Configuration.GMSClient.connect();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed");
         if(!mIsResolving) {
-            mIsResolving = resolveConnectionFailure(this, mGoogleApiClient, connectionResult, RC_SIGN_IN);
+            mIsResolving = resolveConnectionFailure(this, Configuration.GMSClient, connectionResult, RC_SIGN_IN);
         }
         dismissProgressDialog();
     }
@@ -132,8 +130,8 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
             if (resultCode == RESULT_OK) {
                 Log.d(TAG, "SIGN_IN:Success");
                 // Sign-in was successful, connect the API Client
-                if(!mGoogleApiClient.isConnected()) {
-                    mGoogleApiClient.connect();
+                if(!Configuration.GMSClient.isConnected()) {
+                    Configuration.GMSClient.connect();
                 }
             } else {
                 Log.d(TAG, "SIGN_IN:Failure");
@@ -149,9 +147,9 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
             Configuration.TTS.shutdown();
         }
 
-        if(mGoogleApiClient != null){
-            if(mGoogleApiClient.isConnected()){
-                mGoogleApiClient.disconnect();
+        if(Configuration.GMSClient != null){
+            if(Configuration.GMSClient.isConnected()){
+                Configuration.GMSClient.disconnect();
             }
         }
         super.onDestroy();
@@ -188,7 +186,7 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
     public void ResumeGame_Clicked(View view) {
         //attempt to load saved game
         PendingResult<Snapshots.OpenSnapshotResult> pendingResult = Games.Snapshots.open(
-                mGoogleApiClient, SNAP_SHOT_NAME, false);
+                Configuration.GMSClient, SNAP_SHOT_NAME, false);
 
         showProgressDialog("Loading Saved Game");
         ResultCallback<Snapshots.OpenSnapshotResult> callback =

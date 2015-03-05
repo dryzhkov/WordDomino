@@ -13,8 +13,8 @@ public class WordDictionary {
     public static final char firstLetter = 'a';
     public static final int arrayLowerBound = 0;
     public static final int arrayUpperBound = 26; //26 letters + space char
+    public static final int minWordLength = 2;
 
-    private static final int minWordLength = 2;
     private int count = 0;
 
     public WordDictionary(){

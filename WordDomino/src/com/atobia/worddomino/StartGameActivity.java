@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.atobia.worddomino.util.Configuration;
+import com.atobia.worddomino.util.Util;
 import com.atobia.worddomino.util.VolumeDialog;
 
 public class StartGameActivity extends Activity implements DialogInterface.OnClickListener {
@@ -82,5 +83,11 @@ public class StartGameActivity extends Activity implements DialogInterface.OnCli
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         this.sg.ListenerResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        Util.SaveGame(sg.game);
     }
 }

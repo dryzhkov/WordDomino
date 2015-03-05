@@ -43,6 +43,7 @@ public class RulesActivity extends Activity {
         new CountDownTimer(timeToSlide * (AllRules.length + 1), timeToSlide) {
 
             public void onTick(long millisUntilFinished) {
+                Log.d("COUNT_DOWN", Integer.toString(currentIndexOfRule + 1));
                 clearAnimations();
                 if (currentIndexOfRule < AllRules.length) {
                     AllRules[currentIndexOfRule].startAnimation(animationSlideInLeft);

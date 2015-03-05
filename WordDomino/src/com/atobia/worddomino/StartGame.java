@@ -28,6 +28,12 @@ import java.util.Random;
 
 public class StartGame extends SurfaceView {
     public StartGameLoop startGameLoop;
+    public Context myContext;
+    public Game game;
+    public long timeStartedListening = 0;
+    public String lastAnswer = "";
+    public char startCharacter = ' ';
+
     private Handler handler;
     private Activity myActivity;
     private TextView TVQuestion;
@@ -35,13 +41,6 @@ public class StartGame extends SurfaceView {
     private TextView TVMultiplier;
     private TextView TVStrikes;
     private EditText ETAnswer;
-    public Context myContext;
-    public Game game;
-    public Util util;
-
-    public long timeStartedListening = 0;
-    public String lastAnswer = "";
-    public char startCharacter = ' ';
 
     public StartGame(Activity activity) {
         super(activity);
@@ -52,18 +51,15 @@ public class StartGame extends SurfaceView {
         this.TVMultiplier = (TextView) this.myActivity.findViewById(R.id.start_game_multiplier);
         this.TVStrikes = (TextView) this.myActivity.findViewById(R.id.start_game_strikes);
         this.ETAnswer = (EditText) this.myActivity.findViewById(R.id.play_over_text);
-        setFocusable(true);
-        this.util = new Util(this.myContext);
-
         this.game = Configuration.LoadedGame;
 
         if(this.game == null){
             //new game
             this.game = new Game();
-            this.game.wd = this.util.LoadWordsFromFile(this.myActivity);
+            this.game.wd = Util.LoadWordsFromFile(this.myActivity);
             this.game.CurrentState = EnumGameState.NEW_GAME;
         }
-
+        setFocusable(true);
         // Show the score
         displayScoreBoard();
 
@@ -78,8 +74,7 @@ public class StartGame extends SurfaceView {
                     try {
                         startGameLoop.join();
                         break;
-                    } catch (InterruptedException e) {
-                    }
+                    } catch (InterruptedException e) {}
                 }
             }
 
@@ -106,7 +101,7 @@ public class StartGame extends SurfaceView {
                 }
                 String message = (Configuration.PlayOverBluetooth ? "Name" : "Type") + " a city that starts with the letter: " + Character.toUpperCase(startCharacter);
                 TVQuestion.setText(message);
-                util.speak(message, new Runnable() {
+                Util.speak(message, new Runnable() {
                     @Override
                     public void run() {
                         if (Configuration.PlayOverBluetooth) {
@@ -158,11 +153,6 @@ public class StartGame extends SurfaceView {
     }
 
     public void WaitForTyping() {
-        // Empty out the text
-        //this.ETAnswer.getText().clear();
-
-        this.ETAnswer.requestFocus();
-
         InputMethodManager imm = (InputMethodManager) this.myActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
 
@@ -173,7 +163,7 @@ public class StartGame extends SurfaceView {
                 if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
                         keyCode == EditorInfo.IME_ACTION_DONE ||
                         event.getAction() == KeyEvent.ACTION_DOWN &&
-                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {                    // hide virtual keyboard
+                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(ETAnswer.getWindowToken(), 0);
 
@@ -202,8 +192,10 @@ public class StartGame extends SurfaceView {
                 //1. Not in the dictionary of valid words
                 //2. Doesn't start with the required letter
                 try {
-
-                    if (lastAnswer == Configuration.SECRET_ANSWER /*boeing*/) {
+                    if (lastAnswer == null || lastAnswer.length() < WordDictionary.minWordLength) {
+                        toSpeak = "Invalid answer.";
+                        isValidAnswer = false;
+                    } else if(lastAnswer == Configuration.SECRET_ANSWER /*boeing*/) {
                         toSpeak = "Mother-flower, you win the game.";
                         AchievementManager.Achievements.BOEING_WINS_ACCOMPLISHED = true;
                     } else if(lastAnswer.charAt(0) != startCharacter){
@@ -250,14 +242,14 @@ public class StartGame extends SurfaceView {
                     TVQuestion.setText(toSpeak);
                     //Game is over if answer is not valid and player has no strikes left.
                     if(!isValidAnswer && noStrikesLeft) {
-                        util.speak(toSpeak, new Runnable() {
+                        Util.speak(toSpeak, new Runnable() {
                             @Override
                             public void run() {
                                 game.CurrentState = EnumGameState.GAME_OVER;
                             }
                         });
                     }else{
-                        util.speak(toSpeak, new Runnable() {
+                        Util.speak(toSpeak, new Runnable() {
                             @Override
                             public void run() {
                                 game.CurrentState = EnumGameState.RETORT;
@@ -289,7 +281,7 @@ public class StartGame extends SurfaceView {
                 // Find answer can return empty
                 if ("".equals(retort)) {
                     toSpeak = "Well, this is embarrassing. I'm stumped, you win.";
-                    util.speak(toSpeak, new Runnable() {
+                    Util.speak(toSpeak, new Runnable() {
                         @Override
                         public void run() {
                         game.CurrentState = EnumGameState.GAME_WON;
@@ -297,7 +289,7 @@ public class StartGame extends SurfaceView {
                     });
                 } else {
                     toSpeak = "My turn. Something that starts with the letter " + Character.toUpperCase(startCharacter) + ". How about " + capitalizeFirstLetter(retort);
-                    util.speak(toSpeak, new Runnable() {
+                    Util.speak(toSpeak, new Runnable() {
                         @Override
                         public void run() {
                             game.CurrentState = EnumGameState.NEXT_ROUND;
@@ -316,7 +308,7 @@ public class StartGame extends SurfaceView {
             public void run() {
                 String toSpeak = "Game starts in - 3. 2. 1. Go!";
                 TVQuestion.setText(toSpeak);
-                util.speak(toSpeak, new Runnable() {
+                Util.speak(toSpeak, new Runnable() {
                     @Override
                     public void run() {
                         game.CurrentState = EnumGameState.ASK_FOR_WORD;
@@ -332,7 +324,7 @@ public class StartGame extends SurfaceView {
             public void run() {
                 String toSpeak = "Your turn.";
                 TVQuestion.setText(toSpeak);
-                util.speak(toSpeak, new Runnable() {
+                Util.speak(toSpeak, new Runnable() {
                     @Override
                     public void run() {
                         game.CurrentState = EnumGameState.ASK_FOR_WORD;
@@ -340,9 +332,6 @@ public class StartGame extends SurfaceView {
                 });
             }
         });
-
-        //TODO: need to save game using GP API. (DONE) NOTE: Do we really want to do it here?
-        Util.SaveGame(game);
     }
 
     public void GameOver(Boolean wonGame){

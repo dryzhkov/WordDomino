@@ -48,7 +48,6 @@ public class SettingsActivity extends FragmentActivity {
             @Override
             public void run() {
                 PageFragment frag = (PageFragment)pageAdapter.instantiateItem(viewPager, 0);
-                Log.d("findbyview null", Integer.toString(R.id.radioGroupGameDiff));
                 Object a = frag.rootView.findViewById(R.id.radioGroupGameDiff);
                 RadioGroup rgDifficulty = (RadioGroup)a;
                 View selectedButton = rgDifficulty.findViewById(rgDifficulty.getCheckedRadioButtonId());
@@ -68,7 +67,6 @@ public class SettingsActivity extends FragmentActivity {
             public void run() {
                 PageFragment frag = (PageFragment) pageAdapter.instantiateItem(viewPager, 1);
                 RadioGroup rgPlayOverBluetooth = (RadioGroup)frag.rootView.findViewById(R.id.radioGroupPlayOverBluetooth);
-                Log.d("play over bluetooth setting", Boolean.toString(Configuration.PlayOverBluetooth));
                 //set first player
                 if(Configuration.PlayOverBluetooth){
                     rgPlayOverBluetooth.check(R.id.rb_playtype_bluetooth);

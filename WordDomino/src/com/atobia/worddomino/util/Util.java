@@ -6,19 +6,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.UUID;
-
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
-import android.widget.Toast;
 import com.atobia.worddomino.R;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.snapshot.Snapshot;
@@ -27,13 +22,6 @@ import com.google.android.gms.games.snapshot.Snapshots;
 import com.google.gson.Gson;
 
 public class Util {
-    private Context context;
-    private TextToSpeech tts;
-
-    public Util(Context c){
-        this.context = c;
-        tts = Configuration.TTS;
-    }
 
     public static WordDictionary LoadWordsFromFile(Context c){
         WordDictionary myDictionary = new WordDictionary();
@@ -113,7 +101,9 @@ public class Util {
         AsyncTask<Void, Void, Boolean> updateTask = new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected void onPreExecute() {
-                Log.d("Util::SaveGame", "Saving Game...");
+                if (!Configuration.GMSClient.isConnected()) {
+                    Configuration.GMSClient.connect();
+                }
             }
 
             @Override
@@ -122,7 +112,7 @@ public class Util {
                         Configuration.GMSClient, SNAP_SHOT_NAME, createIfMissing).await();
 
                 if (!open.getStatus().isSuccess()) {
-                    Log.w("Util::SaveGame", "Could not open Snapshot for update.");
+                    Log.d("Util::SaveGame", "Could not open Snapshot for update.");
                     return false;
                 }
 
@@ -134,7 +124,7 @@ public class Util {
                         Configuration.GMSClient, snapshot, SnapshotMetadataChange.EMPTY_CHANGE).await();
 
                 if (!commit.getStatus().isSuccess()) {
-                    Log.w("Util::SaveGame", "Failed to commit Snapshot.");
+                    Log.d("Util::SaveGame", "Failed to commit Snapshot.");
                     return false;
                 }
                 return true;
@@ -154,10 +144,13 @@ public class Util {
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-    public void speak(String msg, Runnable onFinish){
+    public static void speak(String msg, Runnable onFinish){
+        if(Configuration.TTS == null){
+            throw new IllegalStateException("TextToSpeech has not been instantiated.");
+        }
         final Runnable r = onFinish;
         final String uniqueID = UUID.randomUUID().toString();
-        tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+        Configuration.TTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
 
             @Override
             public void onStart(String utteranceId) {
@@ -165,13 +158,13 @@ public class Util {
 
             @Override
             public void onError(String utteranceId) {
-                tts.stop();
+                Configuration.TTS.stop();
             }
 
             @Override
             public void onDone(String utteranceId) {
                 if(utteranceId.equals(uniqueID)) {
-                    tts.stop();
+                    Configuration.TTS.stop();
                     if(r != null) {
                         r.run();
                     }
@@ -183,6 +176,6 @@ public class Util {
 
         params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, uniqueID);
         Log.d("Util::Speak()", "Now speaking word: [" + msg + "]");
-        tts.speak(msg,TextToSpeech.QUEUE_FLUSH, params);
+        Configuration.TTS.speak(msg,TextToSpeech.QUEUE_FLUSH, params);
     }
 }
