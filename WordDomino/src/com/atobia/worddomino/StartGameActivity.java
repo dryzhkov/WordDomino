@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.atobia.worddomino.util.Configuration;
-import com.atobia.worddomino.util.EnumGameState;
 import com.atobia.worddomino.util.Util;
 import com.atobia.worddomino.util.VolumeDialog;
 
@@ -89,11 +88,6 @@ public class StartGameActivity extends Activity implements DialogInterface.OnCli
     @Override
     protected void onPause(){
         super.onPause();
-
-        if(sg.game.CurrentState != EnumGameState.GAME_OVER && sg.game.CurrentState != EnumGameState.GAME_WON) {
-            //only save game if its not finished
-            Log.d("SG_Activity_onPause", "Saving Game.");
-            Util.SaveGame(sg.game);
-        }
+        Util.SaveGame(sg.game);
     }
 }

@@ -19,10 +19,10 @@ public class AchievementManager {
     }
 
     public static void pushAchievements() {
-        if(!Configuration.GMSClient.isConnected()) {
-            Configuration.GMSClient.connect();
+        if (!Configuration.IsPlayerSignedIn()) {
+            Log.d(TAG, "Not signed in. pushAchievements will now exit.");
+            return;
         }
-
         Log.d(TAG, "Signed in. pushing achievements to the cloud.");
         if (Achievements.PRIME_ACCOMPLISHED) {
             Games.Achievements.unlock(Configuration.GMSClient, mActivity.getString(R.string.achievement_prime));

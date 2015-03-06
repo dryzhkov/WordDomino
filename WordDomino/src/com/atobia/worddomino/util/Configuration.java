@@ -62,6 +62,11 @@ public class Configuration {
         public static final int HARD = 7;
     }
 
+    public class PlayerType{
+        public static final int AI = 0;
+        public static final int Player = 1;
+    }
+
     public static void LoadSettings(Context context){
         SharedPreferences settings = context.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
         GameDifficulty = settings.getInt(GAME_DIFF_KEY, DifficultyLevel.EASY);
@@ -78,5 +83,9 @@ public class Configuration {
         editor.putBoolean(PLAY_OVER_BLUETOOTH, PlayOverBluetooth);
         editor.putBoolean(SAVED_GAME_EXISTS_KEY, SavedGameExists);
         editor.commit();
+    }
+
+    public static boolean IsPlayerSignedIn(){
+        return GMSClient != null && GMSClient.isConnected();
     }
 }
