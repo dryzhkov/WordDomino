@@ -116,6 +116,14 @@ public class Util {
                     return false;
                 }
 
+                int maxSnapshotSize = Games.Snapshots.getMaxDataSize(Configuration.GMSClient);
+                int dataLength = data.length;
+
+                if(dataLength > maxSnapshotSize)
+                {
+                    Log.d("Util::SaveGame", "Game content size (" + dataLength + ") is larger than maximum allowed snapshot size of " + maxSnapshotSize + " bytes. Will exit now.");
+                    return false;
+                }
                 // Change data but leave existing metadata
                 Snapshot snapshot = open.getSnapshot();
                 snapshot.getSnapshotContents().writeBytes(data);

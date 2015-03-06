@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.atobia.worddomino.StartGameActivity;
 
@@ -45,7 +46,7 @@ public class GameOverDialog extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
+        Log.d("onDetach", "Calling sga.finish");
         // finish the activity
         this.sga.finish();
     }
