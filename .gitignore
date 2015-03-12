@@ -15,3 +15,7 @@ TestProject/*
 *.index
 *.classpath
 WordDomino/gradle
+build/
+gradle/
+local.properties
+
