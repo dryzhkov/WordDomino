@@ -18,4 +18,5 @@ WordDomino/gradle
 build/
 gradle/
 local.properties
+someothercrap
 
